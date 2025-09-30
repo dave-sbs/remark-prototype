@@ -18,8 +18,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize clients
-SUPABASE_URL = "http://127.0.0.1:54321"
-SUPABASE_KEY = "sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz"
+SUPABASE_URL = os.getenv("SUPABASE_LOCAL_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_LOCAL_SECRET")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 if not all([SUPABASE_URL, SUPABASE_KEY, OPENAI_API_KEY]):

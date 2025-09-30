@@ -15,11 +15,20 @@ from openai import AsyncOpenAI
 import os
 from dotenv import load_dotenv
 
+from structured_queries import (
+    get_product_by_name,
+    get_product_by_id,
+    get_product_variants,
+    get_product_addons,
+    get_product_colors,
+    get_product_materials
+)
+
 load_dotenv()
 
 # Initialize clients
-SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:54321")
-SUPABASE_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_LOCAL_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_LOCAL_PUBLISHABLE")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -70,8 +79,21 @@ class ComparisonFramework(BaseModel):
     """Pre-computed comparison framework between products."""
     framework_id: str
     products_compared: List[str]
-    comparison_data: Dict[str, Any]
-    use_cases: Optional[List[str]] = None
+    comparison_context: str
+    key_differentiators: Dict[str, Any]
+    decision_criteria: List[str]
+
+
+class AddonMatch(BaseModel):
+    """Matched product addon from semantic search."""
+    addon_id: str
+    product_id: str
+    product_name: str
+    addon_category: str
+    addon_name: str
+    addon_price: float
+    similarity: float
+    is_default: bool
 
 
 # ============================================================================
@@ -123,8 +145,9 @@ async def semantic_product_search_internal(
     design_style: Optional[str] = None
 ) -> List[SemanticSearchResult]:
     """
-    Perform semantic search on product descriptions and features.
-    Uses vector similarity search on product_embeddings table.
+    Perform semantic search on product features.
+    Uses vector similarity search on product_features table.
+    Direct wrapper for semantic_search_product_features RPC - no redundant aggregation.
 
     Args:
         query: Natural language search query
@@ -151,18 +174,19 @@ async def semantic_product_search_internal(
     if design_style:
         rpc_params["filter_design_style"] = design_style
 
-    # Execute semantic search RPC
-    result = await async_supabase_rpc("search_product_embeddings", rpc_params)
+    # Execute semantic search RPC on product_features
+    result = await async_supabase_rpc("semantic_search_product_features", rpc_params)
 
     if not result.data:
         return []
 
+    # Direct mapping - SQL function already handles joins and filtering
     return [
         SemanticSearchResult(
-            product_id=row.get("product_id"),
-            product_name=row.get("product_name"),
-            chunk_text=row.get("chunk_text"),
-            similarity=row.get("similarity"),
+            product_id=row["product_id"],
+            product_name=row["product_name"],
+            chunk_text=f"{row['feature_name']}: {row.get('feature_description', '')}",
+            similarity=row["similarity"],
             price_tier=row.get("price_tier"),
             design_style=row.get("design_style")
         )
@@ -270,11 +294,109 @@ async def search_product_configurations(
     ]
 
 
+async def search_product_addons_semantic(
+    query: str,
+    product_id: Optional[str] = None,
+    max_results: int = 10,
+    min_similarity: float = 0.7
+) -> List[AddonMatch]:
+    """
+    Search product addons using semantic similarity.
+    Uses search_product_addons RPC function.
+
+    Args:
+        query: Natural language description of desired addon/accessory
+        product_id: Optional filter by specific product
+        max_results: Maximum number of addons to return
+        min_similarity: Minimum similarity threshold
+
+    Returns:
+        List of matched addons with similarity scores
+    """
+    # Generate query embedding
+    query_embedding = await generate_embedding(query)
+
+    # Build RPC parameters
+    rpc_params = {
+        "query_embedding": query_embedding,
+        "match_count": max_results,
+        "min_similarity": min_similarity
+    }
+
+    if product_id:
+        rpc_params["filter_product_id"] = product_id
+
+    # Execute semantic search RPC
+    result = await async_supabase_rpc("search_product_addons", rpc_params)
+
+    if not result.data:
+        return []
+
+    return [
+        AddonMatch(
+            addon_id=row["addon_id"],
+            product_id=row["product_id"],
+            product_name=row["product_name"],
+            addon_category=row["addon_category"],
+            addon_name=row["addon_name"],
+            addon_price=row["addon_price"],
+            similarity=row["similarity"],
+            is_default=row["is_default"]
+        )
+        for row in result.data
+    ]
+
+
+async def search_comparison_frameworks_semantic(
+    query: str,
+    max_results: int = 5,
+    min_similarity: float = 0.7
+) -> List[ComparisonFramework]:
+    """
+    Search comparison frameworks using semantic similarity.
+    Uses search_comparison_frameworks RPC function.
+
+    Args:
+        query: Description of comparison scenario or products
+        max_results: Maximum number of frameworks to return
+        min_similarity: Minimum similarity threshold
+
+    Returns:
+        List of matched comparison frameworks
+    """
+    # Generate query embedding
+    query_embedding = await generate_embedding(query)
+
+    # Execute semantic search RPC
+    result = await async_supabase_rpc(
+        "search_comparison_frameworks",
+        {
+            "query_embedding": query_embedding,
+            "match_count": max_results,
+            "min_similarity": min_similarity
+        }
+    )
+
+    if not result.data:
+        return []
+
+    return [
+        ComparisonFramework(
+            framework_id=row["framework_id"],
+            products_compared=row["products_compared"],
+            comparison_context=row["comparison_context"],
+            key_differentiators=row["key_differentiators"],
+            decision_criteria=row["decision_criteria"]
+        )
+        for row in result.data
+    ]
+
+
 async def find_comparison_framework(
     product_ids: List[str]
 ) -> Optional[ComparisonFramework]:
     """
-    Find pre-computed comparison framework for specific products.
+    Find pre-computed comparison framework for specific products by exact product ID match.
     Returns expert-curated product comparisons if they exist.
 
     Args:
@@ -296,12 +418,182 @@ async def find_comparison_framework(
 
     # Return first matching framework
     row = result.data[0]
+
     return ComparisonFramework(
         framework_id=row.get("id"),
         products_compared=row.get("products_compared"),
-        comparison_data=row.get("comparison_data"),
-        use_cases=row.get("use_cases")
+        comparison_context=row.get("comparison_context"),
+        key_differentiators=row.get("key_differentiators"),
+        decision_criteria=row.get("decision_criteria"),
     )
+
+
+# ============================================================================
+# Strategy-Based Retrieval Functions (Aligned with AGENTS_PLAN.md)
+# ============================================================================
+
+async def get_product_full_details(product_id: str) -> Dict[str, Any]:
+    """
+    Strategy D: Rich Context - Parallel fetch everything about a product.
+    Target latency: 200-300ms with parallel execution.
+
+    Args:
+        product_id: Product UUID
+
+    Returns:
+        Complete product context bundle
+    """
+    results = await asyncio.gather(
+        get_product_by_id(product_id),
+        get_product_variants(product_id),
+        get_product_addons(product_id),
+        get_product_colors(product_id),
+        get_product_materials(product_id),
+        return_exceptions=True  # Don't fail if one query fails
+    )
+
+    return {
+        "product": results[0] if not isinstance(results[0], Exception) else None,
+        "variants": results[1] if not isinstance(results[1], Exception) else [],
+        "addons": results[2] if not isinstance(results[2], Exception) else [],
+        "colors": results[3] if not isinstance(results[3], Exception) else [],
+        "materials": results[4] if not isinstance(results[4], Exception) else []
+    }
+
+
+async def strategy_comparison_lookup(product_names: List[str]) -> Dict[str, Any]:
+    """
+    Strategy B: Comparison Lookup - Parallel framework + product details.
+    Target latency: 200-400ms with parallel execution.
+
+    Args:
+        product_names: List of product names to compare
+
+    Returns:
+        Comparison framework and detailed product information
+    """
+    # Get product objects first
+    products = await asyncio.gather(*[
+        get_product_by_name(name) for name in product_names
+    ])
+
+    # Filter out None results
+    valid_products = [p for p in products if p is not None]
+    if len(valid_products) < 2:
+        return {
+            "comparison_framework": None,
+            "products": valid_products,
+            "error": "Need at least 2 valid products for comparison"
+        }
+
+    product_ids = [p.id for p in valid_products]
+
+    # Parallel fetch: framework + full details for each product
+    framework_task = find_comparison_framework(product_ids)
+    details_tasks = [get_product_full_details(pid) for pid in product_ids]
+
+    results = await asyncio.gather(framework_task, *details_tasks)
+
+    return {
+        "comparison_framework": results[0],
+        "products": results[1:]
+    }
+
+
+async def strategy_scenario_match(user_query: str) -> Dict[str, Any]:
+    """
+    Strategy C: Scenario Match - Semantic search → enrich with product data.
+    Target latency: 300-500ms (embedding + search + parallel product fetch).
+
+    Args:
+        user_query: User's description of their situation/needs
+
+    Returns:
+        Matched scenario with enriched product details
+    """
+    # Step 1: Find matching scenarios (includes embedding generation)
+    scenarios = await find_use_case_scenarios(user_query, max_results=3)
+
+    if not scenarios:
+        return {
+            "scenario": None,
+            "products": [],
+            "alternatives": []
+        }
+
+    top_scenario = scenarios[0]
+
+    # Step 2: Parallel fetch product details for recommended products
+    product_tasks = [
+        get_product_by_id(pid) for pid in top_scenario.recommended_products[:5]
+    ]
+    products = await asyncio.gather(*product_tasks, return_exceptions=True)
+
+    # Filter out failed fetches
+    valid_products = [p for p in products if p is not None and not isinstance(p, Exception)]
+
+    return {
+        "scenario": top_scenario,
+        "products": valid_products,
+        "alternatives": scenarios[1:],
+        "talking_points": top_scenario.description,
+        "reasoning": top_scenario.reasoning
+    }
+
+
+async def strategy_rich_configuration_search(
+    query: str,
+    product_name: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Enhanced configuration search with product context.
+    Target latency: 250-400ms.
+
+    Args:
+        query: Description of desired configuration
+        product_name: Optional product name filter
+
+    Returns:
+        Configurations with full product details
+    """
+    # Get product_id if product name provided
+    product_id = None
+    if product_name:
+        product = await get_product_by_name(product_name)
+        if product:
+            product_id = product.id
+
+    # Search configurations
+    configurations = await search_product_configurations(
+        query=query,
+        product_id=product_id,
+        max_results=5
+    )
+
+    if not configurations:
+        return {
+            "configurations": [],
+            "products": []
+        }
+
+    # Get unique product IDs from configurations
+    unique_product_ids = list(set(config.product_id for config in configurations))
+
+    # Parallel fetch product details
+    product_details = await asyncio.gather(*[
+        get_product_by_id(pid) for pid in unique_product_ids
+    ], return_exceptions=True)
+
+    # Map products by ID for easy lookup
+    products_map = {
+        p.id: p for p in product_details
+        if p is not None and not isinstance(p, Exception)
+    }
+
+    return {
+        "configurations": configurations,
+        "products_map": products_map
+    }
 
 
 async def multi_query_semantic_search(
@@ -330,7 +622,7 @@ async def multi_query_semantic_search(
     async def search_single(embedding):
         async with semaphore:
             result = await async_supabase_rpc(
-                "search_product_embeddings",
+                "semantic_search_product_features",
                 {
                     "query_embedding": embedding,
                     "match_count": max_results_per_query,
@@ -382,11 +674,22 @@ def semantic_product_search(
     max_results: Annotated[int, InjectedToolArg] = 10,
     price_tier: Annotated[Optional[str], InjectedToolArg] = None
 ) -> str:
-    """Search products using natural language queries with semantic understanding.
+    """Search products using natural language with vector similarity.
 
-    Use this when users describe what they need in natural language, rather than
-    filtering by exact attributes. Good for queries like "comfortable chair for
-    long coding sessions" or "something modern and ergonomic".
+    **When to use:**
+    - User describes needs vaguely or qualitatively ("comfortable", "modern", "for back pain")
+    - Need semantic understanding of features, not just exact matches
+    - User mentions use case, pain points, or desired qualities
+
+    **Don't use if:**
+    - User specifies exact price range (use search_products_by_price from structured_queries)
+    - User asks for specific product by name (use get_product_details from structured_queries)
+    - User wants to compare specific products (use compare_products_with_framework)
+
+    **Examples:**
+    - "comfortable chair for long coding sessions" ✓
+    - "something modern and ergonomic" ✓
+    - "chairs under $1000" ✗ (use search_products_by_price)
 
     Args:
         query: Natural language description of what the user is looking for
@@ -432,11 +735,29 @@ def find_best_use_case(
     user_situation: str,
     max_scenarios: Annotated[int, InjectedToolArg] = 3
 ) -> str:
-    """Match user's situation to expert-recommended product scenarios.
+    """Match user's situation to expert sales scenarios and recommendations.
 
-    Use this when users describe their work environment, health concerns, or
-    specific use cases. Examples: "I work from home with back pain", "setting
-    up an executive office", "need chair for gaming and work".
+    **When to use:**
+    - User describes their work environment, daily routine, or lifestyle
+    - User mentions health concerns (back pain, posture issues, ergonomics)
+    - User explains their role or typical usage pattern
+    - Need expert sales talking points and objection handlers
+
+    **Don't use if:**
+    - User already knows which product they want (use get_product_details)
+    - User is just browsing by price (use search_products_by_price)
+
+    **Examples:**
+    - "I work from home with back pain" ✓
+    - "setting up an executive office" ✓
+    - "need chair for 12-hour coding sessions" ✓
+    - "show me all chairs" ✗ (use list_all_products)
+
+    **What you get:**
+    - Matched use case scenarios with similarity scores
+    - Product recommendations tailored to the situation
+    - Sales talking points and reasoning
+    - Objection handlers for common concerns
 
     Args:
         user_situation: Description of user's needs, environment, or situation
@@ -481,11 +802,28 @@ def find_popular_configuration(
     configuration_description: str,
     product_name: Optional[str] = None
 ) -> str:
-    """Find pre-built popular product configurations matching user needs.
+    """Find pre-built popular product configurations using semantic search.
 
-    Use this when users ask for recommended setups, popular configurations,
-    or typical builds. Examples: "what's a good Aeron setup for developers",
-    "most popular Cosm configuration", "typical executive chair setup".
+    **When to use:**
+    - User asks for recommended setups or popular configurations
+    - User wants to see typical builds or common combinations
+    - User describes desired features and wants pre-packaged options
+    - Need to suggest complete configurations with add-ons
+
+    **Don't use if:**
+    - User wants to build custom configuration from scratch (use get_chair_configuration_price)
+    - User just wants to see base product options (use get_product_details)
+
+    **Examples:**
+    - "what's a good Aeron setup for developers" ✓
+    - "most popular Cosm configuration" ✓
+    - "typical executive chair setup" ✓
+    - "build me a custom Aeron" ✗ (use get_product_details + get_chair_configuration_price)
+
+    **What you get:**
+    - Pre-built configurations ranked by popularity
+    - Complete pricing including all add-ons
+    - Variant and add-on combinations
 
     Args:
         configuration_description: Description of desired configuration or use case
@@ -497,8 +835,6 @@ def find_popular_configuration(
     # Get product_id if product name provided
     product_id = None
     if product_name:
-        # Import from structured_queries to reuse existing function
-        from .structured_queries import get_product_by_name
         product = asyncio.run(get_product_by_name(product_name))
         if product:
             product_id = product.id
@@ -538,11 +874,27 @@ def find_popular_configuration(
 def compare_products_with_framework(
     product_names: List[str]
 ) -> str:
-    """Get expert comparison between specific products if available.
+    """Get expert comparison framework between specific products.
 
-    Use this when users want to compare 2-3 specific products. This returns
-    pre-computed expert comparisons if they exist. Examples: "compare Aeron
-    vs Cosm", "what's the difference between Lino and Aeron".
+    **When to use:**
+    - User explicitly wants to compare 2-3 specific products by name
+    - User asks "what's the difference between X and Y"
+    - Need expert-curated comparison with key differentiators
+
+    **Don't use if:**
+    - User hasn't decided which products to compare yet (use semantic_product_search first)
+    - User wants general product browsing (use list_all_products or search)
+
+    **Examples:**
+    - "compare Aeron vs Cosm" ✓
+    - "what's the difference between Lino and Aeron" ✓
+    - "which chair is better for me" ✗ (use find_best_use_case first)
+
+    **What you get:**
+    - Pre-computed expert comparison frameworks (if available)
+    - Key differentiators organized by category
+    - Decision criteria to help users choose
+    - If no framework exists, prompts for feature-by-feature comparison
 
     Args:
         product_names: List of product names to compare (2-3 products)
@@ -550,9 +902,6 @@ def compare_products_with_framework(
     Returns:
         Formatted comparison framework or indication that comparison doesn't exist
     """
-    # Get product IDs from names
-    from .structured_queries import get_product_by_name
-
     product_ids = []
     for name in product_names:
         product = asyncio.run(get_product_by_name(name))
@@ -574,8 +923,8 @@ def compare_products_with_framework(
     output = f"**Expert Comparison: {' vs '.join(product_names)}**\n\n"
 
     # Format comparison data (structure depends on your schema)
-    if isinstance(framework.comparison_data, dict):
-        for category, details in framework.comparison_data.items():
+    if isinstance(framework.key_differentiators, dict):
+        for category, details in framework.key_differentiators.items():
             output += f"**{category}:**\n"
             if isinstance(details, dict):
                 for key, value in details.items():
@@ -584,10 +933,10 @@ def compare_products_with_framework(
                 output += f"  {details}\n"
             output += "\n"
 
-    if framework.use_cases:
-        output += "**Best for:**\n"
-        for use_case in framework.use_cases:
-            output += f"- {use_case}\n"
+    if framework.decision_criteria:
+        output += "**Use case criteria:**\n"
+        for decision_criteria in framework.decision_criteria:
+            output += f"- {decision_criteria}\n"
 
     return output
 
@@ -597,10 +946,24 @@ def expanded_semantic_search(
     primary_query: str,
     query_variations: Annotated[List[str], InjectedToolArg] = []
 ) -> str:
-    """Perform expanded semantic search with multiple query variations for better coverage.
+    """Expanded semantic search with multiple query variations for broader coverage.
 
-    Use this when the user query might be ambiguous or when you want to ensure
-    comprehensive results. The agent can provide query variations to expand coverage.
+    **When to use:**
+    - User query is ambiguous or could mean multiple things
+    - Want comprehensive results by searching multiple interpretations
+    - Need to cast a wider net for semantic matches
+
+    **Don't use if:**
+    - Query is already specific and clear (use semantic_product_search)
+    - User wants exact/structured filtering (use structured query tools)
+    - Speed is critical (this takes 2x longer than regular semantic search)
+
+    **Examples:**
+    - User says "ergonomic" → also search "posture support", "back comfort", "adjustable"
+    - User says "modern" → also search "contemporary design", "minimalist", "sleek"
+
+    **Performance note:** Generates embeddings for multiple queries in parallel, searches each,
+    then deduplicates results. Takes longer but catches more edge cases.
 
     Args:
         primary_query: Main search query from user

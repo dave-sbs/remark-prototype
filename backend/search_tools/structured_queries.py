@@ -13,12 +13,13 @@ from typing_extensions import Annotated
 from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
 # Initialize Supabase client
-SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:54321")
-SUPABASE_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_LOCAL_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_LOCAL_PUBLISHABLE")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
@@ -524,3 +525,45 @@ def get_sustainable_options(product_name: str) -> str:
             output += f"  {m.description}\n"
 
     return output
+
+
+# ============================================================================
+# Helper Tools
+# ============================================================================
+def get_today_str() -> str:
+    """Get current date in a human-readable format."""
+    return datetime.now().strftime("%a %b %-d, %Y")
+
+def convert_feet_to_inches(height_feet: float, height_inches: float = 0) -> float:
+    """Convert height from feet and inches to total inches.
+    
+    Args:
+        height_feet: Height in feet (e.g., 5)
+        height_inches: Additional inches (e.g., 9 for 5'9"), defaults to 0
+    
+    Returns:
+        Total height in inches
+    """
+    return height_feet * 12 + height_inches
+
+def convert_m_to_inches(height_m: float) -> float:
+    """Convert height from meters to inches.
+    
+    Args:
+        height_m: Height in meters (e.g., 1.75)
+    
+    Returns:
+        Height in inches
+    """
+    return height_m * 39.3701
+
+def convert_kg_to_pounds(weight_kg: float) -> float:
+    """Convert weight from kilograms to pounds.
+    
+    Args:
+        weight_kg: Weight in kilograms (e.g., 80)
+    
+    Returns:
+        Weight in pounds
+    """
+    return weight_kg * 2.20462
