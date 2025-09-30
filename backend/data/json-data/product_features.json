@@ -1,0 +1,282 @@
+[
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "8Z Pellicle Suspension",
+        "feature_category": "ergonomics",
+        "description": "Elastomeric suspension in eight support zones that eliminates pressure points and increases airflow",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "PostureFit SL",
+        "feature_category": "ergonomics",
+        "description": "Adjustable sacral and lumbar spine support",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Harmonic 2 Tilt",
+        "feature_category": "ergonomics",
+        "description": "Balanced recline and movement mechanism",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Three Size Options",
+        "feature_category": "customization",
+        "description": "Three fit sizes (A, B, C) to accommodate the 1st to 99th percentile of users",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Arm Options",
+        "feature_category": "adjustability",
+        "description": "Choice of Armless, Fixed, Height Adjustable, or Fully Adjustable arms",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Adjustable Lumbar Support",
+        "feature_category": "ergonomics",
+        "description": "Optional adjustable lumbar support for personalized back comfort",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Tilt Options",
+        "feature_category": "adjustability",
+        "description": "Available with PostureFit, Tilt limiter, Tilt with seat angle, or standard tilt",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Stool/ESD Models",
+        "feature_category": "customization",
+        "description": "Available as stool or ESD (Electrostatic Discharge) models for specialized environments",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Leather Arm Pads",
+        "feature_category": "customization",
+        "description": "Optional leather arm pads for enhanced comfort",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "12-Year Warranty",
+        "feature_category": "warranty",
+        "description": "12-year, 3-shift warranty coverage",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "feature_name": "Sustainable Design",
+        "feature_category": "sustainability",
+        "description": "Highly sustainable design with over 50% recycled material, no foam or leather core",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Auto-Harmonic Tilt",
+        "feature_category": "ergonomics",
+        "description": "Instantly balances tilt for all users without manual adjustments",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Intercept Suspension",
+        "feature_category": "ergonomics",
+        "description": "Breathable, gapless seat-back with dynamic spinal support",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Flexible Frame",
+        "feature_category": "ergonomics",
+        "description": "Thin, strong, unobtrusive frame that supports full movement",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Leaf Arms",
+        "feature_category": "ergonomics",
+        "description": "Soft, wide, unique resting area for arms",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Dipped-in-Color Design",
+        "feature_category": "customization",
+        "description": "Unified color streamlines design for cohesive aesthetic",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Back Height Options",
+        "feature_category": "customization",
+        "description": "Available in Low, Mid, or High back configurations",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "Arm Options",
+        "feature_category": "adjustability",
+        "description": "Available with Leaf Arms, Height-Adjustable, Fixed, or Armless",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "12-Year Warranty",
+        "feature_category": "warranty",
+        "description": "12-year, 3-shift warranty coverage",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "feature_name": "MicrobeCare",
+        "feature_category": "customization",
+        "description": "Optional MicrobeCare protection available on select models",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "Duo Suspension",
+        "feature_category": "ergonomics",
+        "description": "Breathable suspension back with integral lumbar support",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "Contoured Seat",
+        "feature_category": "ergonomics",
+        "description": "Contoured seat for balanced movement and dynamic fit",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "Adjustable PostureFit Lumbar Support",
+        "feature_category": "ergonomics",
+        "description": "Optional adjustable PostureFit lumbar support",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "Arm Options",
+        "feature_category": "adjustability",
+        "description": "Available with Fully Adjustable, Height-Adjustable, Fixed, or Armless",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "Back Options",
+        "feature_category": "customization",
+        "description": "Available with Suspension or upholstered back",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "12-Year Warranty",
+        "feature_category": "warranty",
+        "description": "12-year warranty coverage",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "feature_name": "Sustainable Manufacturing",
+        "feature_category": "sustainability",
+        "description": "Manufactured with sustainable practices",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Sitting Pocket Suspension",
+        "feature_category": "ergonomics",
+        "description": "Unique sitting pocket suspension design for comfort and flexibility",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Tilt Mechanism",
+        "feature_category": "ergonomics",
+        "description": "Some models include tilt and seat height adjustment (executive, management)",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Arm Options",
+        "feature_category": "customization",
+        "description": "Choice of arms or armless configurations",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Model Variations",
+        "feature_category": "customization",
+        "description": "Available in Executive (high-back), Management (mid-back), Side chair, Lounge, and Ottoman configurations",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Base Options",
+        "feature_category": "customization",
+        "description": "Available with 4-star base (glides) or 5-star base (casters for carpet or hard floor)",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Premium Upholstery",
+        "feature_category": "customization",
+        "description": "Upholstered with ribbed fabric, contract-grade or premium leathers, or advanced breathable Cygnus mesh",
+        "is_standard": false,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "12-Year Warranty",
+        "feature_category": "warranty",
+        "description": "12-year warranty coverage",
+        "is_standard": true,
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "feature_name": "Iconic Mid-Century Design",
+        "feature_category": "customization",
+        "description": "Renowned for durability and iconic mid-century modern design",
+        "is_standard": true,
+        "embedding": null
+    }
+]

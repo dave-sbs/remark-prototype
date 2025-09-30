@@ -1,0 +1,10 @@
+supabase
+openai
+python-dotenv
+langgraph
+langchain
+langchain-openai
+langchain-anthropic
+langchain_community
+langchain_mcp_adapters
+pydantic

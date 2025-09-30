@@ -1,0 +1,439 @@
+[
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "tilt",
+        "addon_name": "Standard Tilt",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "tilt",
+        "addon_name": "Tilt Limiter",
+        "addon_price": 91.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "tilt",
+        "addon_name": "Tilt Limiter + Seat Angle",
+        "addon_price": 191.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "arms",
+        "addon_name": "No Arms",
+        "addon_price": 0.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "arms",
+        "addon_name": "Fixed Arms",
+        "addon_price": 222.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "arms",
+        "addon_name": "Height-Adjustable Arms",
+        "addon_price": 296.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "arms",
+        "addon_name": "Fully Adjustable Arms",
+        "addon_price": 452.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "arm_pads",
+        "addon_name": "Leather Armpads",
+        "addon_price": 167.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "Only applies when arms are selected (Fixed or Height-Adjustable)"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "back_support",
+        "addon_name": "Basic Back Support",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "back_support",
+        "addon_name": "Adjustable Lumbar Support",
+        "addon_price": 65.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "back_support",
+        "addon_name": "Adjustable PostureFit SL",
+        "addon_price": 95.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "finish",
+        "addon_name": "Polished Aluminum Base",
+        "addon_price": 250.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Aeron Chair",
+        "addon_category": "casters",
+        "addon_name": "Carpet Casters",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "arms",
+        "addon_name": "No Arms",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "arms",
+        "addon_name": "Fixed Arms",
+        "addon_price": 115.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "arms",
+        "addon_name": "Height-Adjustable Arms",
+        "addon_price": 227.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "arms",
+        "addon_name": "Leaf Arms",
+        "addon_price": 278.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "finish",
+        "addon_name": "Graphite",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "finish",
+        "addon_name": "Carbon",
+        "addon_price": 55.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "finish",
+        "addon_name": "Studio White",
+        "addon_price": 75.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "addon_category": "protection",
+        "addon_name": "MicrobeCare",
+        "addon_price": 97.50,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "PRICES.md shows range $70-$125, using midpoint $97.50"
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category 1",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category 2",
+        "addon_price": 8.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category 3",
+        "addon_price": 17.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category 4",
+        "addon_price": 34.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category 5",
+        "addon_price": 56.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category 7",
+        "addon_price": 109.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "fabric",
+        "addon_name": "Price Category L",
+        "addon_price": 229.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "arms",
+        "addon_name": "Armless",
+        "addon_price": 0.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "arms",
+        "addon_name": "Fixed Arms",
+        "addon_price": 10.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "Base price $755 with fixed arms, derived from pricing combinations"
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "arms",
+        "addon_name": "Height-Adjustable Arms",
+        "addon_price": 30.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "Derived from pricing combination differences"
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "arms",
+        "addon_name": "Fully Adjustable Arms",
+        "addon_price": 85.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "Base price $885 with adjustable lumbar + adjustable arms"
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "back_support",
+        "addon_name": "Adjustable Lumbar Support",
+        "addon_price": 55.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "Derived from pricing difference: $810 (fixed arms + back support) - $755 (fixed arms only)"
+    },
+    {
+        "product_name": "Lino Chair",
+        "addon_category": "finish",
+        "addon_name": "Polished Aluminum Base",
+        "addon_price": 150.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 1",
+        "addon_price": 0.00,
+        "is_default": true,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 2",
+        "addon_price": 60.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 3",
+        "addon_price": 112.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 4",
+        "addon_price": 172.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 5",
+        "addon_price": 188.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 8",
+        "addon_price": 437.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 9",
+        "addon_price": 731.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "fabric",
+        "addon_name": "Category 10M",
+        "addon_price": 1040.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "addon_category": "arm_pads",
+        "addon_name": "Arm Pad Premium",
+        "addon_price": 235.00,
+        "is_default": false,
+        "requires_variant_type": null,
+        "incompatible_addons": [],
+        "embedding": null,
+        "_note": "PRICES.md mentions 'up to +$235 for highest tier arm pad'"
+    }
+]

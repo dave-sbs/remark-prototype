@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Aeron Chair",
+        "price_tier": "premium",
+        "design_style": "modern-ergonomic",
+        "brand_line": "performance"
+    },
+    {
+        "name": "Cosm Chair",
+        "price_tier": "mid-range",
+        "design_style": "minimalist",
+        "brand_line": "versatile"
+    },
+    {
+        "name": "Lino Chair",
+        "price_tier": "budget",
+        "design_style": "modern-ergonomic",
+        "brand_line": "value"
+    },
+    {
+        "name": "Eames Aluminum Group Chair",
+        "price_tier": "luxury",
+        "design_style": "classic-executive",
+        "brand_line": "iconic"
+    }
+]

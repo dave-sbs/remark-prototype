@@ -1,0 +1,168 @@
+[
+    {
+        "product_name": "Aeron Chair",
+        "configuration_name": "Essential Size B",
+        "variant_name": "Size B",
+        "addon_names": [
+            "Standard Tilt",
+            "Height-Adjustable Arms",
+            "Basic Back Support",
+            "Carpet Casters"
+        ],
+        "total_price": 1947.00,
+        "popularity_rank": 1,
+        "description": "Most popular configuration with height-adjustable arms and standard features",
+        "embedding": null,
+        "_note": "Base $1651 + Height-Adjustable Arms $296 = $1947"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "configuration_name": "Ergonomic Pro Size B",
+        "variant_name": "Size B",
+        "addon_names": [
+            "Tilt Limiter + Seat Angle",
+            "Height-Adjustable Arms",
+            "Adjustable PostureFit SL",
+            "Carpet Casters"
+        ],
+        "total_price": 2233.00,
+        "popularity_rank": 2,
+        "description": "Enhanced ergonomics with PostureFit SL and advanced tilt control",
+        "embedding": null,
+        "_note": "Base $1651 + Tilt Limiter+Seat $191 + Height-Adjustable Arms $296 + PostureFit SL $95 = $2233"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "configuration_name": "Premium Size C",
+        "variant_name": "Size C",
+        "addon_names": [
+            "Tilt Limiter + Seat Angle",
+            "Height-Adjustable Arms",
+            "Leather Armpads",
+            "Adjustable PostureFit SL",
+            "Polished Aluminum Base",
+            "Carpet Casters"
+        ],
+        "total_price": 2650.00,
+        "popularity_rank": 3,
+        "description": "Fully loaded large size with premium finishes and all ergonomic features",
+        "embedding": null,
+        "_note": "Base $1651 + Tilt $191 + Height-Adj Arms $296 + Leather Pads $167 + PostureFit SL $95 + Polished Base $250 = $2650"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "configuration_name": "Low Back Essentials",
+        "variant_name": "Low Back",
+        "addon_names": [
+            "No Arms",
+            "Graphite"
+        ],
+        "total_price": 1584.00,
+        "popularity_rank": 1,
+        "description": "Most affordable Cosm configuration for collaborative spaces",
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "configuration_name": "Mid Back with Leaf Arms",
+        "variant_name": "Mid Back",
+        "addon_names": [
+            "Leaf Arms",
+            "Carbon"
+        ],
+        "total_price": 1982.00,
+        "popularity_rank": 2,
+        "description": "Popular configuration with signature Leaf Arms and Carbon finish",
+        "embedding": null
+    },
+    {
+        "product_name": "Cosm Chair",
+        "configuration_name": "High Back Executive",
+        "variant_name": "High Back",
+        "addon_names": [
+            "Leaf Arms",
+            "Studio White"
+        ],
+        "total_price": 2101.00,
+        "popularity_rank": 3,
+        "description": "Premium high-back with Leaf Arms and Studio White finish",
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "configuration_name": "Value Essential",
+        "variant_name": "Standard",
+        "addon_names": [
+            "Price Category 1",
+            "Armless"
+        ],
+        "total_price": 745.00,
+        "popularity_rank": 1,
+        "description": "Most affordable configuration with basic fabric and no arms",
+        "embedding": null,
+        "_note": "Base $745 = armless, no back support"
+    },
+    {
+        "product_name": "Lino Chair",
+        "configuration_name": "Standard Comfort",
+        "variant_name": "Standard",
+        "addon_names": [
+            "Price Category 1",
+            "Fixed Arms"
+        ],
+        "total_price": 755.00,
+        "popularity_rank": 2,
+        "description": "Basic fabric with fixed arms for essential support",
+        "embedding": null
+    },
+    {
+        "product_name": "Lino Chair",
+        "configuration_name": "Ergonomic Pro",
+        "variant_name": "Standard",
+        "addon_names": [
+            "Price Category 1",
+            "Fully Adjustable Arms",
+            "Adjustable Lumbar Support"
+        ],
+        "total_price": 885.00,
+        "popularity_rank": 3,
+        "description": "Full ergonomic setup with adjustable arms and lumbar support",
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "configuration_name": "Management Standard",
+        "variant_name": "Management Chair",
+        "addon_names": [
+            "Category 1"
+        ],
+        "total_price": 2189.00,
+        "popularity_rank": 1,
+        "description": "Classic management configuration with standard fabric",
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "configuration_name": "Executive Leather",
+        "variant_name": "Executive Chair",
+        "addon_names": [
+            "Category 9"
+        ],
+        "total_price": 3480.00,
+        "popularity_rank": 2,
+        "description": "Premium executive chair with leather upholstery",
+        "embedding": null
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "configuration_name": "Side Chair Classic",
+        "variant_name": "Side Chair",
+        "addon_names": [
+            "Category 2"
+        ],
+        "total_price": 1857.00,
+        "popularity_rank": 3,
+        "description": "Elegant side chair for conference rooms with Category 2 fabric",
+        "embedding": null
+    }
+]

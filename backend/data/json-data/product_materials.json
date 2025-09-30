@@ -1,0 +1,100 @@
+[
+    {
+        "product_name": "Aeron Chair",
+        "component": "Frame",
+        "material": "Recycled materials including ocean-bound plastic",
+        "is_sustainable": true,
+        "description": "Frame constructed from recycled materials, now featuring ocean-bound plastic"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "component": "Arms",
+        "material": "Recycled materials including ocean-bound plastic",
+        "is_sustainable": true,
+        "description": "Arms constructed from recycled materials, now featuring ocean-bound plastic"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "component": "Base",
+        "material": "Recycled materials including ocean-bound plastic",
+        "is_sustainable": true,
+        "description": "Base constructed from recycled materials, now featuring ocean-bound plastic"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "component": "Seat/Back",
+        "material": "8Z Pellicle elastomeric suspension",
+        "is_sustainable": false,
+        "description": "8Z Pellicle elastomeric suspension in eight support zones"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "component": "Arm Pads",
+        "material": "Leather (optional)",
+        "is_sustainable": false,
+        "description": "Optional leather arm pads available"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "component": "Suspension",
+        "material": "Intercept Suspension",
+        "is_sustainable": false,
+        "description": "Breathable, gapless seat-back suspension with dynamic spinal support"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "component": "Frame",
+        "material": "Flexible frame material",
+        "is_sustainable": false,
+        "description": "Thin, strong, unobtrusive flexible frame that supports full movement"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "component": "Arms",
+        "material": "Soft material (Leaf Arms)",
+        "is_sustainable": false,
+        "description": "Soft, wide Leaf Arms providing unique resting area"
+    },
+    {
+        "product_name": "Lino Chair",
+        "component": "Frame",
+        "material": "Black or Mineral finish",
+        "is_sustainable": true,
+        "description": "Frame available in Black or Mineral finish with sustainable manufacturing"
+    },
+    {
+        "product_name": "Lino Chair",
+        "component": "Base",
+        "material": "Matching color or polished aluminum",
+        "is_sustainable": true,
+        "description": "Base matching frame color or polished aluminum with sustainable manufacturing"
+    },
+    {
+        "product_name": "Lino Chair",
+        "component": "Back",
+        "material": "Duo Suspension",
+        "is_sustainable": false,
+        "description": "Breathable suspension back with integral lumbar support"
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "component": "Frame",
+        "material": "Die-cast aluminum",
+        "is_sustainable": false,
+        "description": "Die-cast aluminum frame with powder coat or polished finishes"
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "component": "Base",
+        "material": "Die-cast aluminum",
+        "is_sustainable": false,
+        "description": "Die-cast aluminum base with powder coat or polished finishes"
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "component": "Upholstery",
+        "material": "Leather, fabric, or Cygnus mesh",
+        "is_sustainable": false,
+        "description": "Upholstered with ribbed fabric, contract-grade or premium leathers, or advanced breathable Cygnus mesh"
+    }
+]

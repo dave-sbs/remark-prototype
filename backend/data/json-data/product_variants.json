@@ -1,0 +1,83 @@
+[
+    {
+        "product_name": "Aeron Chair",
+        "variant_type": "size",
+        "variant_name": "Size A",
+        "base_price": 1651.00,
+        "is_default": false,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "variant_type": "size",
+        "variant_name": "Size B",
+        "base_price": 1651.00,
+        "is_default": true,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Aeron Chair",
+        "variant_type": "size",
+        "variant_name": "Size C",
+        "base_price": 1651.00,
+        "is_default": false,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "variant_type": "back_height",
+        "variant_name": "Low Back",
+        "base_price": 1584.00,
+        "is_default": true,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "variant_type": "back_height",
+        "variant_name": "Mid Back",
+        "base_price": 1649.00,
+        "is_default": false,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Cosm Chair",
+        "variant_type": "back_height",
+        "variant_name": "High Back",
+        "base_price": 1748.00,
+        "is_default": false,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Lino Chair",
+        "variant_type": "standard",
+        "variant_name": "Standard",
+        "base_price": 745.00,
+        "is_default": true,
+        "effective_date": "2025-01-01",
+        "_note": "Base price is armless with no back support, calculated from provided pricing combinations"
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "variant_type": "model",
+        "variant_name": "Side Chair",
+        "base_price": 1797.00,
+        "is_default": false,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "variant_type": "model",
+        "variant_name": "Management Chair",
+        "base_price": 2189.00,
+        "is_default": true,
+        "effective_date": "2025-01-01"
+    },
+    {
+        "product_name": "Eames Aluminum Group Chair",
+        "variant_type": "model",
+        "variant_name": "Executive Chair",
+        "base_price": 2749.00,
+        "is_default": false,
+        "effective_date": "2025-01-01"
+    }
+]

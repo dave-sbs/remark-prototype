@@ -1,0 +1,218 @@
+[
+  {
+    "scenario_name": "Remote Worker with Back Pain - Home Office Setup",
+    "user_profile": {
+      "occupation": "Software Engineer",
+      "work_environment": "Home office, 8-10 hours daily",
+      "experience_level": "First-time premium chair buyer",
+      "decision_timeline": "1-2 weeks",
+      "purchase_authority": "Individual"
+    },
+    "pain_points": [
+      "Lower back pain after long sitting sessions",
+      "Current chair lacks lumbar support",
+      "Difficulty maintaining good posture throughout the day",
+      "Concerned about long-term health impacts",
+      "Unsure if expensive chair is worth the investment"
+    ],
+    "recommended_products": [
+      "a84ed3b1-af81-4bbe-9f76-04e3aa95a078",
+      "543f17bc-f34f-47b2-af45-1d6f930da323"
+    ],
+    "talking_points": "For someone experiencing back pain during long work sessions, the key is finding a chair that provides both dynamic support and encourages movement. The Aeron Chair is the gold standard here - its PostureFit SL provides targeted lumbar support that adjusts to your spine's natural curve, not just your lower back. The 8Z Pellicle suspension distributes your weight evenly, eliminating pressure points that cause discomfort. What makes it special for developers is that it supports you whether you're leaning forward coding or reclining during a call. The Lino Chair is our newer, more budget-friendly option that still delivers excellent lumbar support through its Duo Suspension back. It's particularly good if you prefer a more minimal aesthetic. Both chairs encourage micro-movements throughout the day, which research shows is crucial for spinal health. Given your pain points, I'd lean toward the Aeron Size B with PostureFit SL and adjustable arms - it's an investment, but one that typically pays for itself in improved comfort and productivity within months.",
+    "objection_handlers": {
+      "price_concern": "I completely understand the price feels significant. Let me break down the value: if you're working 8 hours a day, that's 2,000+ hours per year in this chair. The Aeron typically lasts 12+ years with the warranty, so you're looking at about $0.50 per hour of use. Compare that to physical therapy visits or ergonomic accessories you might buy trying to fix a cheaper chair. Most of our customers with back pain tell us they wish they'd made this investment sooner.",
+      "need_to_try_first": "That's a smart approach. The Aeron has a 30-day trial period through most authorized dealers. What I'd suggest is trying Size B if you're 5'4\"-6'6\" and under 230 lbs - that's the sweet spot for most people. Pay attention to the lumbar support in the first few days as your body adjusts to proper posture support.",
+      "comparing_to_gaming_chairs": "Gaming chairs and office chairs serve different purposes. Gaming chairs prioritize aesthetics and racing-style seating, but they're typically padded foam that compresses over time. The Aeron uses a suspension membrane that doesn't compress and provides better airflow. For someone with existing back pain, the Aeron's PostureFit SL targets the specific vertebrae that need support, while gaming chairs offer more general cushioning that doesn't address postural issues."
+    },
+    "success_metrics": [
+      "Reduced or eliminated back pain within 2-4 weeks",
+      "Improved ability to maintain focus during long sessions",
+      "Better posture awareness throughout the day",
+      "Customer reports they can work longer without discomfort"
+    ],
+    "budget_range": {
+      "min": 1000,
+      "max": 2000,
+      "flexibility": "medium",
+      "notes": "Willing to invest for health, but wants to understand value"
+    },
+    "recommended_configurations": [],
+    "_note": "Configuration IDs to be filled after configurations are uploaded"
+  },
+  {
+    "scenario_name": "Corporate Bulk Purchase - Office Fit-Out",
+    "user_profile": {
+      "occupation": "Office Manager / Facilities Director",
+      "work_environment": "Corporate office, 50-100 employees",
+      "experience_level": "Experienced with office furniture procurement",
+      "decision_timeline": "1-3 months with multiple stakeholders",
+      "purchase_authority": "Requires executive approval"
+    },
+    "pain_points": [
+      "Need to balance budget constraints with employee satisfaction",
+      "Diverse employee body types and preferences",
+      "Wants furniture that makes a statement about company culture",
+      "Concerned about long-term durability and warranty support",
+      "Need to coordinate with interior design aesthetic",
+      "Previous cheap chairs led to employee complaints and frequent replacements"
+    ],
+    "recommended_products": [
+      "eae98cf2-100b-45c1-9fa8-73b057b7d288",
+      "543f17bc-f34f-47b2-af45-1d6f930da323"
+    ],
+    "talking_points": "For a corporate fit-out, you're really making two investments: one in employee wellbeing and one in your company's physical brand. The Cosm Chair is our best solution for diverse workforces because it automatically adjusts to each user without any manual controls - employees just sit down and it conforms to their body. This is crucial when you have hot-desking or shared workspaces. No training needed, no adjustment period. The Intercept Suspension provides that premium Herman Miller feel while being remarkably easy to maintain. For a 50-100 person office, you'd likely want a mix: Cosm for open workspace and hot-desking areas where simplicity is key, and perhaps Aeron or Lino for assigned desks where employees can dial in their perfect setup. The Cosm comes in multiple colorways - the Studio White or Semi-Polished Alloy frames make a striking design statement that signals you invest in your people. From a facilities standpoint, Herman Miller's 12-year warranty is industry-leading, and we have a strong service network. These chairs typically last 15-20 years in corporate settings. I'd also mention that companies often see reduced sick days and improved retention after upgrading to proper ergonomic seating - there's real ROI beyond the initial cost.",
+    "objection_handlers": {
+      "budget_constraints": "I understand you're working within a specific budget. Let's talk about a phased approach: start with 20-30 chairs for your most critical roles or those with existing discomfort issues. You can expand as budget allows. We also offer volume discounting starting at 10+ units, and many companies find that spreading the cost over 2-3 fiscal years makes it more manageable. The Lino Chair is an excellent option at a lower price point while still maintaining Herman Miller quality - it's about 40% less than the Cosm but still delivers excellent ergonomic support.",
+      "employees_want_different_chairs": "That's actually very common and shows your employees are engaged. The beauty of the Cosm is its versatility - the auto-adjusting mechanism means it works for 95% of users without them needing to think about it. For the 5% with very specific needs - perhaps someone with a medical condition - you can accommodate them with an Aeron that offers more granular adjustments. We can help you establish a chair allocation policy that gives some choice while maintaining consistency.",
+      "long_procurement_timeline": "A 1-3 month timeline actually works well for us. Here's how we typically structure it: Week 1-2, we set up demo chairs in your office so employees can try them. Week 3-4, gather feedback and finalize specifications and colors. Week 5-8, we process the order and coordinate delivery timing with your facilities team. Week 9-12, delivery and installation with minimal disruption. This gives you time to build internal consensus and manage stakeholder approvals."
+    },
+    "success_metrics": [
+      "Reduced employee complaints about seating within 30 days",
+      "Positive feedback in next employee satisfaction survey",
+      "Fewer facilities maintenance requests related to chairs",
+      "Achievement of aesthetic goals for office space",
+      "Successful coordination with planned rollout timeline"
+    ],
+    "budget_range": {
+      "min": 50000,
+      "max": 150000,
+      "flexibility": "high",
+      "notes": "Multi-year budget, can be phased, volume discounts applicable"
+    },
+    "recommended_configurations": [],
+    "_note": "Configuration IDs to be filled after configurations are uploaded"
+  },
+  {
+    "scenario_name": "Executive Office - Prestige and Comfort",
+    "user_profile": {
+      "occupation": "C-Suite Executive, Senior Partner, or Founder",
+      "work_environment": "Corner office or executive suite, client-facing",
+      "experience_level": "Experienced with premium furniture, high expectations",
+      "decision_timeline": "Flexible, quality over timeline",
+      "purchase_authority": "Full authority, may consult interior designer"
+    },
+    "pain_points": [
+      "Current chair doesn't match the gravitas of the office",
+      "Needs to impress clients and project success",
+      "Long hours in meetings and at desk - comfort is critical",
+      "Wants iconic design that signals taste and sophistication",
+      "Previous 'executive leather chair' looks impressive but causes back pain",
+      "Office aesthetic needs to balance modern and timeless"
+    ],
+    "recommended_products": [
+      "c30b4970-fe09-469d-af2d-262d858ca255",
+      "a84ed3b1-af81-4bbe-9f76-04e3aa95a078"
+    ],
+    "talking_points": "For an executive office, you're looking for something that makes a statement while delivering the comfort you need for those long strategy sessions. The Eames Aluminum Group Executive Chair is Herman Miller's answer to traditional leather executive chairs - it has that commanding presence and timeless design that clients notice, but with actual ergonomic support. This is the chair that's been in boardrooms and executive offices since 1958, designed by Charles and Ray Eames. You're sitting in a piece of design history. The die-cast aluminum frame with polished or powder-coat finishes projects sophistication. You can spec it with premium leather that develops a beautiful patina over time, or the modern Cygnus mesh if you prefer breathability. What makes it different from traditional executive chairs is the suspension system - you get that executive aesthetic without sacrificing spinal support. Now, if ergonomics is absolutely paramount and you're spending 10+ hours at your desk, the Aeron in Graphite or Carbon is the modern executive choice. It's the chair you see in tech CEOs' offices - it signals you prioritize performance and results over traditional status symbols. The Aeron is unapologetically functional, and that's become its own form of prestige. Some executives do both - Eames Aluminum for the desk where clients visit, Aeron in the adjacent private workspace where they do deep work.",
+    "objection_handlers": {
+      "not_traditional_enough": "I understand wanting that classic executive look. Here's the thing - the Eames Aluminum chair IS the traditional executive chair for design-conscious leaders. It's been the choice of executives for 65+ years. What's changed is that cheap imitations of 1980s leather throne chairs have made that look feel dated. The Eames chair in black leather with polished aluminum base has timeless gravitas. Walk into any top design firm, architectural practice, or creative agency C-suite - you'll see Eames chairs. It's a different kind of traditional - one rooted in design excellence rather than boardroom cliché.",
+      "price_for_what_looks_simple": "The simplicity is the point - that's Eames design philosophy. What you're paying for is 65 years of refinement and the fact that this chair will still look contemporary in your office 20 years from now. The die-cast aluminum frame is engineered to a micrometer - this isn't stamped metal. The suspension system allows natural movement while maintaining that executive posture. And the resale value is remarkable - vintage Eames executive chairs often sell for more than they cost new. This is furniture as investment, not expense.",
+      "prefer_mesh_for_comfort": "That's exactly why we have the Cygnus mesh option for the Eames chair - you get the executive aesthetic with advanced breathability. Or, if you want to go fully modern, the Aeron is increasingly the executive standard in tech, finance, and consulting. Some might say it's not 'executive' enough, but I'd argue that in 2024, the real power move is choosing the chair that maximizes your performance rather than one that just looks impressive. The Aeron says 'I care about results.' Pair it with the right desk and office design, and it absolutely commands respect.",
+      "clients_expect_leather": "Interesting - I'd challenge that assumption. Yes, 15 years ago that was true. But today's clients - especially younger decision-makers - often respect leaders who choose substance over show. The Eames chair solves this beautifully because you CAN get it in premium leather if client perception matters, but it's recognizable designer leather, not generic 'executive chair' leather. It shows discernment. That said, if your client base is very traditional (law, banking, established industries), the Eames in leather absolutely delivers that credibility while being far more comfortable than traditional executive chairs."
+    },
+    "success_metrics": [
+      "Office aesthetic elevated to match position and taste",
+      "Positive comments from clients and colleagues about the space",
+      "Ability to work comfortably for extended periods",
+      "Chair remains timeless as office trends change",
+      "Improved back comfort compared to previous traditional executive chair"
+    ],
+    "budget_range": {
+      "min": 2000,
+      "max": 5000,
+      "flexibility": "very high",
+      "notes": "Price is not the primary concern - wants the right piece, may consult with interior designer, considers long-term value and resale"
+    },
+    "recommended_configurations": [],
+    "_note": "Eames Aluminum Group Chair is the primary recommendation for traditional executive aesthetic. Aeron is the alternative for modern/tech executives. This scenario is about prestige and design legacy, not just ergonomics."
+  },
+  {
+    "scenario_name": "Creative Professional - Studio Aesthetic and Function",
+    "user_profile": {
+      "occupation": "Graphic Designer, Photographer, Architect, Creative Director",
+      "work_environment": "Home studio or small agency (3-10 people), client visits occasionally",
+      "experience_level": "Design-literate, understands good design, moderate furniture knowledge",
+      "decision_timeline": "2-4 weeks, researches thoroughly",
+      "purchase_authority": "Individual or small team decision"
+    },
+    "pain_points": [
+      "Current chair doesn't match the aesthetic quality of their work",
+      "Studio/office is part of their portfolio when clients visit",
+      "Long hours in front of screen doing detailed work",
+      "Appreciates design but not executive-level budget",
+      "Wants something Instagram-worthy but genuinely functional",
+      "Previous 'designer' chairs looked good but weren't comfortable for full workdays"
+    ],
+    "recommended_products": [
+      "eae98cf2-100b-45c1-9fa8-73b057b7d288",
+      "543f17bc-f34f-47b2-af45-1d6f930da323"
+    ],
+    "talking_points": "As a creative professional, your workspace IS part of your work - it tells clients about your attention to detail and standards. The Cosm Chair is designed for exactly this situation. It's sculptural enough to be a focal point in your studio, available in colors that actually make a statement - Canyon, Glacier, Nightfall - not just 'office black.' The Intercept Suspension looks like one continuous piece of material, which is incredibly photogenic and modern. What makes it perfect for creatives is the effortless experience - you sit down and it just works. No fiddling with levers when a client is there, no awkward adjustments. The Auto Harmonic Tilt means you can lean back during a phone call or lean forward to review details on screen, and the chair moves with you naturally. For long retouching sessions or CAD work, that continuous support prevents the fatigue that kills your eye for detail late in the day. The Lino Chair is the understated alternative if you prefer a more minimal look - it's equally modern but doesn't try to be the hero piece. Some studios do Cosm for the main desk area where clients see, and Lino for team members or back-office work. Both have that Herman Miller quality that signals you're serious about craft. The key difference: Cosm is a conversation piece and design statement, Lino is quietly confident and professional.",
+    "objection_handlers": {
+      "too_expensive_for_creative_budget": "I get it - creative budgets are tight, and this feels like a lot for a chair. Here's how I'd think about it: this is a tool, like your camera or software subscription. If you bill $75-150/hour, this chair pays for itself in less than 10 billable hours of improved comfort and focus. The Lino at $799 is particularly compelling - it's Herman Miller quality at a price point that won't make your accountant cry. And unlike a computer that's obsolete in 3 years, this chair will still be contemporary and comfortable in 10 years. Also, it's a legitimate business expense and tax write-off.",
+      "want_it_to_photograph_well": "That's exactly what the Cosm was designed for. Studio Yves Béhar created it to be photogenic from every angle - there are no bad sides. The high-back version in particular has that striking silhouette. The Canyon or Glacier colorways photograph beautifully in natural light. You can literally shoot your chair for your studio's Instagram and it'll look intentional, not like you're trying too hard. The Eames chairs do this too, but they read more 'midcentury' - Cosm is distinctly contemporary.",
+      "prefer_more_unique_boutique_brands": "I respect that impulse - you want something not everyone has. Here's the thing: Cosm is Herman Miller's newest chair (2019), so it's not as ubiquitous as the Aeron yet. When clients see it, they recognize it's quality but it doesn't scream 'I bought the same chair as every tech startup.' The color options help with this - Canyon and Glacier are distinctly not corporate. If you really want something special, the Eames Aluminum chairs are design icons that never go out of style, though they're pricier. But honestly? Having a Cosm or Lino shows you prioritize function over fashion, which is its own form of sophistication.",
+      "small_studio_space_concerns": "Perfect point - the Lino has a notably smaller footprint than most ergonomic chairs. It's designed for exactly this situation: apartments, small studios, multi-purpose rooms. The Cosm is slightly larger but still reasonable. Both are way more space-efficient than gaming chairs or traditional executive chairs. And because they look good from all angles, you can place them where they're visible rather than hiding them."
+    },
+    "success_metrics": [
+      "Studio aesthetic elevated to match quality of creative output",
+      "Positive client comments about the space",
+      "Ability to work through long detail-oriented sessions comfortably",
+      "Chair photographs well for portfolio/social media",
+      "Improved posture during precision work (retouching, CAD, illustration)"
+    ],
+    "budget_range": {
+      "min": 800,
+      "max": 1500,
+      "flexibility": "medium-high",
+      "notes": "Will stretch budget for right design, views as business investment and tax write-off, values design legacy"
+    },
+    "recommended_configurations": [],
+    "_note": "Cosm is the hero recommendation for this segment - design-forward aesthetics meet functionality. Lino is the budget-conscious alternative. This scenario is about the chair as part of the creative toolkit and studio brand."
+  },
+  {
+    "scenario_name": "Student/Recent Grad - First Quality Setup",
+    "user_profile": {
+      "occupation": "Graduate student, entry-level professional, or bootcamp grad",
+      "work_environment": "Apartment, shared housing, or first studio",
+      "experience_level": "Never owned premium furniture, used campus/office chairs",
+      "decision_timeline": "Flexible, saving up or watching for sales",
+      "purchase_authority": "Individual, very price-conscious"
+    },
+    "pain_points": [
+      "Current IKEA/Amazon chair causing discomfort after long study/work sessions",
+      "Small budget but recognizes need for quality",
+      "Unsure if Herman Miller is 'for people like them'",
+      "Wants something that will last through career progression",
+      "Limited space in apartment or shared housing",
+      "Sees expensive chairs as 'luxury' not 'investment'",
+      "May need to justify expense to parents or partner"
+    ],
+    "recommended_products": [
+      "543f17bc-f34f-47b2-af45-1d6f930da323"
+    ],
+    "talking_points": "Let me start by saying: Herman Miller isn't just for executives or big companies. The Lino Chair was specifically designed to make Herman Miller ergonomics accessible to people who are starting out. At $799, it's a real investment on a student or entry-level budget, but here's why it makes sense: you're entering the phase of your career where you'll be sitting 8+ hours a day for the next 40+ years. The chair you choose now sets your baseline for back health. The Lino gives you genuine Herman Miller engineering - the Duo Suspension back with lumbar support, adjustable arms, quality construction - at about half what an Aeron costs. It's covered by the same 12-year warranty, which means this chair can literally take you from entry-level to senior roles. The compact footprint works in small apartments, and the modern minimal aesthetic doesn't scream 'office' if you're working from your bedroom or living room. What makes this different from a $200-300 'ergonomic' chair is that those chairs feel okay for the first few months, then the foam compresses, the mechanisms get loose, and you're back shopping in 2-3 years. You'll spend more replacing cheap chairs than buying one good one. This is your first real career investment - think of it like buying quality shoes or a good mattress. Your body will thank you.",
+    "objection_handlers": {
+      "cant_justify_800_dollars": "I completely understand - $800 feels like a huge number when you're starting out. Let's reframe this: if you keep this chair for just 5 years (though it'll last 10+), that's $160 per year, or about $13 per month. That's less than most streaming subscriptions. If you work or study 40 hours a week, that's $0.07 per hour. You probably spend more on coffee per day than this chair costs per week. And unlike coffee, this chair is a one-time purchase that protects your health. Many of our younger customers finance it on a 0% APR credit card or save up over 2-3 months. It's also a legitimate home office tax deduction if you're freelancing or self-employed.",
+      "should_i_just_buy_used_aeron": "That's a smart instinct - the used market for Aerons is strong. A used Aeron in good condition runs $400-700, so the savings aren't as dramatic as you might think. The risk is: you don't know how it was maintained, whether all the adjustments work, if it's the right size for you, and there's no warranty. The Lino at $799 new gives you: right size for your body, full warranty, modern design, and the peace of mind that it's YOUR chair. If budget is really tight, a used Aeron from a reputable dealer isn't a bad move, but I'd argue the extra $100-200 for new Lino is worth it for the warranty alone.",
+      "partner_thinks_its_wasteful": "This is a really common conversation. Here's how to frame it: ask your partner what they spend on their most-used item - maybe a car, phone, or bed. They probably didn't buy the cheapest option because they use it constantly. You're going to spend 2,000+ hours per year in this chair - it's literally the interface between your body and your income. A $200 chair that hurts your back and needs replacing in 2 years isn't frugal, it's expensive. The Lino at $799 with a 12-year warranty is actually the financially responsible choice. Show them the per-hour cost calculation. If they still push back, suggest a trial period from a dealer that offers returns - once they see the difference in your comfort and productivity, they'll get it.",
+      "too_nice_for_my_current_situation": "I hear this a lot, and it's actually backwards thinking. You don't 'earn' the right to good ergonomics by reaching a certain career level. Your spine doesn't care if you're an intern or a VP. The time to invest in your back health is NOW, at the beginning of your career, not after you've spent years in cheap chairs developing chronic pain. The Lino isn't flashy or status-y - it's a smart, practical choice. Think of it as investing in future-you. And honestly? Having a quality chair in your first apartment or home office signals to yourself that you're serious about your work, even if no one else sees it."
+    },
+    "success_metrics": [
+      "Successfully completes long study/work sessions without discomfort",
+      "Feels confident about the investment after first few weeks",
+      "Chair fits well in limited apartment space",
+      "Begins to see chair as career investment rather than expense",
+      "Improves posture and reduces fatigue during thesis writing, coding, etc."
+    ],
+    "budget_range": {
+      "min": 500,
+      "max": 900,
+      "flexibility": "low",
+      "notes": "Very price-sensitive, may be saving up, looking for sales, considering financing, needs strong value justification"
+    },
+    "recommended_configurations": [],
+    "_note": "Lino is the ONLY recommendation here - it's the gateway Herman Miller chair for this demographic. This scenario is about overcoming 'Herman Miller isn't for me' beliefs and reframing as career investment, not luxury."
+  }
+]
