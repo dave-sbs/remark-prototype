@@ -1,17 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useChat } from '@ai-sdk/react'
 import ChatMessage from './ChatMessage'
-import { ArrowUp, Loader2 } from 'lucide-react'
+import { ArrowUp, CrossIcon, Loader2, MessageCircleX, X } from 'lucide-react'
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false)
     const [input, setInput] = useState('')
     const [fallbackInput, setFallbackInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [threadId, setThreadId] = useState<string>()
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-    const { messages, sendMessage } = useChat()
+    // Generate thread ID on mount
+    useEffect(() => {
+        setThreadId(crypto.randomUUID())
+    }, [])
+
+    // Reset textarea height when input is empty
+    useEffect(() => {
+        if (input === '' && textareaRef.current) {
+            textareaRef.current.style.height = 'auto'
+        }
+    }, [input])
+
+    const { messages, sendMessage } = useChat({
+        // @ts-expect-error - AI SDK v5 types not fully updated yet, but body parameter works as documented
+        body: { threadId },
+    })
 
     return (
         <>
@@ -31,7 +48,7 @@ export default function ChatWidget() {
             {isOpen && (
                 <div className="fixed bottom-8 right-8 w-full md:w-[420px] max-w-[420px] h-[600px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-50">
                     {/* Header */}
-                    <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-white rounded-t-xl">
+                    <div className="p-4 flex justify-between items-center bg-white rounded-t-xl">
                         <div>
                             <h3 className="font-semibold text-lg">Boku Studio</h3>
                         </div>
@@ -39,15 +56,12 @@ export default function ChatWidget() {
                             onClick={() => setIsOpen(false)}
                             className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
                         >
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                                <line x1="12" y1="4" x2="4" y2="12" />
-                                <line x1="4" y1="4" x2="12" y2="12" />
-                            </svg>
+                            <X />
                         </button>
                     </div>
 
                     {/* Messages container */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
                         {messages.length === 0 ? (
                             <div className="text-center text-gray-500 text-sm mt-8">
                                 <p className="mb-2">👋 Hi! Welcome to Boku Studio!</p>
@@ -81,16 +95,33 @@ export default function ChatWidget() {
                         className="p-4 bg-white rounded-b-xl"
                     >
                         <div className="relative">
-                            <input
+                            <textarea
+                                ref={textareaRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault()
+                                        e.currentTarget.form?.requestSubmit()
+                                    }
+                                }}
                                 placeholder="Ask about our chairs..."
-                                className="w-full pl-4 pr-12 py-3 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-transparent transition-all"
+                                rows={1}
+                                className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-2xl focus:shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent transition-all resize-none overflow-hidden overflow-y-auto min-h-[48px] max-h-[120px]"
+                                style={{
+                                    height: 'auto',
+                                    overflowY: input.split('\n').length > 3 ? 'auto' : 'hidden'
+                                }}
+                                onInput={(e) => {
+                                    const target = e.currentTarget
+                                    target.style.height = 'auto'
+                                    target.style.height = Math.min(target.scrollHeight, 120) + 'px'
+                                }}
                             />
                             <button
                                 type="submit"
                                 disabled={!input.trim()}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
+                                className="absolute right-2 bottom-2 mb-2 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
                             >
                                 {isLoading ? <Loader2 className="animate-spin" /> : <ArrowUp />}
                             </button>

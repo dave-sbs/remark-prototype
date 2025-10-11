@@ -26,7 +26,7 @@ export default function ChatMessage({ message }: { message: Message }) {
                     : 'bg-[#f5f1eb] text-gray-900 rounded-2xl rounded-bl-md'
                 }
       `}>
-                <div className="whitespace-pre-wrap break-words">
+                <div className="whitespace-pre-wrap break-words overflow-wrap-anywhere">
                     {content}
                 </div>
             </div>

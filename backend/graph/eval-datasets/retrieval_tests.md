@@ -32,10 +32,6 @@ Here are 8 different customer scenarios at the Herman Miller shop:
 **Customer Profile:** Tom, 38, came with partner who wants to buy a chair
 **Situation:** "Look, my wife really wants one of these chairs. I'm just here because she dragged me along. But seriously—$1,500 for a chair? What am I missing? I bought a chair on Amazon for $200 and it's fine. Can you actually explain to me why these are worth it? Like, what physically makes this worth seven times more than a regular office chair? I'm not trying to be difficult, I just genuinely don't understand."
 
-## Scenario 8: The Skeptical Partner
-**Customer Profile:** Tom, 38, came with partner who wants to buy a chair
-**Situation:** "Look, my wife really wants one of these chairs. I'm just here because she dragged me along. But seriously—$1,500 for a chair? What am I missing? I bought a chair on Amazon for $200 and it's fine. Can you actually explain to me why these are worth it? Like, what physically makes this worth seven times more than a regular office chair? I'm not trying to be difficult, I just genuinely don't understand."
-
 ## Scenario 9: Weird Desk Setup
 **Customer Profile:** Dave, 21, has a really weird table with sort of a kitchen island height
 **Situation:** "I have this weird table setup at my house. The table's height is pretty high, it's like a kitchen bar island sort of height. And I was wondering do you guys have chairs that would sort of have either a stool type of configuration or just high enough so that I can sit and work from that bar table?"
