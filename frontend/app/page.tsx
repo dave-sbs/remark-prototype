@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import ProductDetail from './components/ProductDetail'
 import { productDetailsData } from './data/productDetails'
+import ChatWidget from './components/ChatWidget'
 
 type ProductItem = {
   id: string
@@ -72,7 +73,7 @@ export default function Home() {
       <header className="pt-8 pb-4">
         <div className="max-w-[90vw]">
           <div className="flex flex-row items-start justify-between">
-            <h1 className="font-medium mb-3 tracking-tight">REMARK STUDIO</h1>
+            <h1 className="font-medium mb-3 tracking-tight">BOKU STUDIO</h1>
             <nav className="flex font-semibold text-lg">
               <a href="#" className="hover:underline ml-1">Furniture</a>
               <span>,</span>
@@ -155,7 +156,7 @@ export default function Home() {
               <a href="mailto:info@davesah.bs@gmail.com" className="text-lg font-semibold hover:underline">EMAIL</a>
             </div>
             <div className="flex flex-col space-y-1 justify-between items-start text-lg font-semibold">
-              <p className="uppercase tracking-wider">Remark Studio</p>
+              <p className="uppercase tracking-wider">Boku Studio</p>
               <p>©2025</p>
             </div>
           </div>
@@ -169,6 +170,9 @@ export default function Home() {
           onClose={() => setSelectedProductId(null)}
         />
       )}
+
+      {/* Chat Widget */}
+      <ChatWidget />
     </main >
   )
 }
