@@ -1,0 +1,137 @@
+import { ProductDetailData } from '../components/ProductDetail'
+
+export const productDetailsData: Record<string, ProductDetailData> = {
+    '1': {
+        id: '1',
+        number: 'n°0001',
+        name: 'Aeron Chair',
+        images: [
+            '/product_images/aeron-landing.png',
+            '/product_images/aeron-landing.png', // Add more angles when available
+            '/product_images/aeron-landing.png',
+        ],
+        description: 'The groundbreaking Aeron Chair redefined office seating with its innovative design and ergonomic features. Created by Don Chadwick and Bill Stumpf, it features a revolutionary 8Z Pellicle suspension material that eliminates heat buildup and conforms to your body. Available in three sizes to fit a wide range of body types.',
+        features: [
+            '8Z Pellicle suspension eliminates heat buildup',
+            'PostureFit SL adjustable lumbar support',
+            'Tilt limiter with seat angle adjustment',
+            'Adjustable arms with height and width adjustment',
+            'Forward tilt for active sitting',
+            'Environmentally responsible - up to 50% recycled content',
+        ],
+        specifications: [
+            { label: 'Width', value: '27"' },
+            { label: 'Depth', value: '16.75" - 20.25"' },
+            { label: 'Height', value: '38.25" - 42.5"' },
+            { label: 'Seat Height', value: '16" - 20.5"' },
+            { label: 'Weight Capacity', value: '350 lbs' },
+            { label: 'Warranty', value: '12 years' },
+        ],
+        pricing: [
+            { label: 'Base Configuration', price: 1595 },
+            { label: 'Fully Loaded', price: 1895 },
+        ],
+        specSheetUrl: '#',
+        contactEmail: 'info@remark.studio',
+    },
+    '2': {
+        id: '2',
+        number: 'n°0002',
+        name: 'Cosm Chair',
+        images: [
+            '/product_images/cosm-landing.png',
+            '/product_images/cosm-landing.png',
+            '/product_images/cosm-landing.png',
+        ],
+        description: 'The Cosm Chair offers instant, personalized comfort through its innovative Auto-Harmonic Tilt mechanism. Designed by Studio 7.5, this chair automatically adjusts to your body, requiring no manual adjustments. The Intercept suspension provides balanced support while the leaf springs create a sophisticated, responsive feel.',
+        features: [
+            'Auto-Harmonic Tilt adjusts automatically to your body',
+            'Intercept suspension for balanced support',
+            'Leaf spring system for natural movement',
+            'No manual adjustments needed',
+            'Available with or without arms',
+            'Designed for intuitive comfort',
+        ],
+        specifications: [
+            { label: 'Width', value: '23.5" - 28"' },
+            { label: 'Depth', value: '16.5"' },
+            { label: 'Height', value: '32" - 35.5"' },
+            { label: 'Seat Height', value: '15.5" - 19"' },
+            { label: 'Weight Capacity', value: '300 lbs' },
+            { label: 'Warranty', value: '12 years' },
+        ],
+        pricing: [
+            { label: 'Mid Back', price: 1095 },
+            { label: 'High Back', price: 1395 },
+        ],
+        specSheetUrl: '#',
+        contactEmail: 'info@remark.studio',
+    },
+    '3': {
+        id: '3',
+        number: 'n°0003',
+        name: 'Eames Aluminum Group Chair',
+        images: [
+            '/product_images/eames-landing.png',
+            '/product_images/eames-landing.png',
+            '/product_images/eames-landing.png',
+        ],
+        description: 'An iconic design by Charles and Ray Eames, the Aluminum Group Chair combines sculptural beauty with exceptional comfort. The die-cast aluminum frame suspends a sling seat that conforms to your body. A timeless classic that brings elegance to any workspace.',
+        features: [
+            'Die-cast aluminum frame with polished or powder-coated finish',
+            'Leather or fabric sling suspension',
+            'Available in executive, management, and side chair heights',
+            'Swivel base with smooth glide casters',
+            'Timeless mid-century modern design',
+            'Handcrafted in the USA',
+        ],
+        specifications: [
+            { label: 'Width', value: '21.5"' },
+            { label: 'Depth', value: '22"' },
+            { label: 'Height', value: '33" - 37"' },
+            { label: 'Seat Height', value: '17" - 21"' },
+            { label: 'Weight Capacity', value: '300 lbs' },
+            { label: 'Warranty', value: '5 years' },
+        ],
+        pricing: [
+            { label: 'Fabric Sling', price: 2195 },
+            { label: 'Leather Sling', price: 2895 },
+        ],
+        specSheetUrl: '#',
+        contactEmail: 'info@remark.studio',
+    },
+    '4': {
+        id: '4',
+        number: 'n°0004',
+        name: 'Lino Chair',
+        images: [
+            '/product_images/lino-landing.png',
+            '/product_images/lino-landing.png',
+            '/product_images/lino-landing.png',
+        ],
+        description: 'The Lino Chair by Sam Hecht and Kim Colin brings refined simplicity to the workplace. Its clean lines and thoughtful proportions create a chair that works beautifully in any environment. The flexible backrest and contoured seat provide comfort without complexity.',
+        features: [
+            'Minimalist design with clean lines',
+            'Flexible backrest adapts to your movement',
+            'Contoured seat for all-day comfort',
+            'Available with or without arms',
+            'Multiple base options including 4-leg and sled',
+            'Stackable design for space efficiency',
+        ],
+        specifications: [
+            { label: 'Width', value: '21"' },
+            { label: 'Depth', value: '20"' },
+            { label: 'Height', value: '31"' },
+            { label: 'Seat Height', value: '18"' },
+            { label: 'Weight Capacity', value: '250 lbs' },
+            { label: 'Warranty', value: '5 years' },
+        ],
+        pricing: [
+            { label: '4-Leg Base', price: 595 },
+            { label: 'With Casters', price: 795 },
+        ],
+        specSheetUrl: '#',
+        contactEmail: 'info@remark.studio',
+    },
+}
+

@@ -32,4 +32,18 @@ So given the product table isn't super long we can call a tool that gets the pro
 From there get the user's question and depending on how specific they asked determine whether an additional tool call is necessary or respond immediately. The response prompt will be crafted intentionally to provide useful nudges that guide their journey to get one step closer to making a purchase decision.
 
 
-Need to summarize conversation context eventually
+---
+**Next Steps**
+- Need to summarize conversation context eventually
+- Think through conversations that interplay with the envrionment:
+    - Table height
+    - Room color
+    - Accessibility
+    - Sustainability
+- Think through edge cases like:
+    - Whether items are currenlty in inventory
+    - Weird budget limits
+    - Ambiguous requests
+    - Hallucinations
+    - Prompt injections
+    - Interruptions
