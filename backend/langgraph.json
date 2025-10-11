@@ -1,0 +1,11 @@
+{
+    "graphs": {
+        "router_agent": "./graph/agents/router_agent.py:router_agent",
+        "sales_agent": "./graph/agents/simplified_agent.py:sales_agent"
+    },
+    "python_version": "3.11",
+    "env": ".env",
+    "dependencies": [
+        "."
+    ]
+}

@@ -5,6 +5,12 @@ Tests the response formatting and function behavior without requiring database/e
 
 import asyncio
 from unittest.mock import Mock, patch, AsyncMock
+import sys
+from pathlib import Path
+
+# Add parent directory to path so we can import semantic_queries
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from semantic_queries import (
     semantic_product_search,
     find_best_use_case,

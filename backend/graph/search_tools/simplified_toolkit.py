@@ -1,7 +1,6 @@
 """
 Structured SQL-based search functions for product catalog.
 These are fast, deterministic queries for exact matches and filters.
-Target latency: <100ms
 """
 
 import asyncio
@@ -22,15 +21,13 @@ SUPABASE_URL = os.getenv("SUPABASE_LOCAL_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_LOCAL_PUBLISHABLE")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-
 # ============================================================================
 # Async Supabase Wrapper
 # ============================================================================
 
 async def async_supabase_query(query_builder):
     """Execute Supabase query asynchronously."""
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, lambda: query_builder.execute())
+    return await asyncio.to_thread(query_builder.execute)
 
 
 # ============================================================================
@@ -44,7 +41,6 @@ class Product(BaseModel):
     design_style: Optional[str] = None
     brand_line: Optional[str] = None
 
-
 class ProductVariant(BaseModel):
     id: str
     product_id: str
@@ -53,6 +49,13 @@ class ProductVariant(BaseModel):
     base_price: float
     is_default: bool
 
+class ProductFeature(BaseModel):
+    id: str
+    product_id: str
+    feature_name: str
+    feature_category: str
+    description: Optional[str] = None
+    is_standard: bool
 
 class ProductAddon(BaseModel):
     id: str
@@ -104,7 +107,6 @@ class PriceBreakdown(BaseModel):
     addons: List[Dict[str, Any]]
     total_price: float
 
-
 # ============================================================================
 # Core API Functions (Direct Supabase Access)
 # ============================================================================
@@ -115,13 +117,11 @@ async def get_all_products() -> List[Product]:
     result = await async_supabase_query(query)
     return [Product(**row) for row in result.data] if result.data else []
 
-
 async def get_product_by_id(product_id: str) -> Optional[Product]:
     """Fetch a specific product by ID."""
     query = supabase.table("products").select("*").eq("id", product_id)
     result = await async_supabase_query(query)
     return Product(**result.data[0]) if result.data else None
-
 
 async def get_product_by_name(product_name: str) -> Optional[Product]:
     """Fetch a product by exact name match (case-insensitive)."""
@@ -129,28 +129,23 @@ async def get_product_by_name(product_name: str) -> Optional[Product]:
     result = await async_supabase_query(query)
     return Product(**result.data[0]) if result.data else None
 
-
-async def search_products_by_price_range(
-    min_price: float,
-    max_price: float,
-    price_tier: Optional[str] = None
-) -> List[Dict[str, Any]]:
-    """
-    Search products by price range across all variants.
-    Returns products with their matching variants.
-    """
-    query = supabase.table("product_variants").select(
-        "id, variant_name, variant_type, base_price, products(id, name, price_tier, design_style)"
-    ).gte("base_price", min_price).lte("base_price", max_price)
-
-    if price_tier:
-        query = query.eq("products.price_tier", price_tier)
-
-    query = query.order("base_price")
+async def get_all_products_with_price() -> Optional[float]:
+    """Fetch the price of a product by ID."""
+    query = supabase.table("product_variants").select("*").eq("is_default", True)
     result = await async_supabase_query(query)
+    return [ProductVariant(**row) for row in result.data] if result.data else []
 
-    return result.data if result.data else []
+async def get_product_features_by_product_id(product_id: str) -> Optional[List[ProductFeature]]:
+    """Fetch the features of a product by ID."""
+    query = supabase.table("product_features").select("*").eq("product_id", product_id)
+    result = await async_supabase_query(query)
+    return [ProductFeature(**row) for row in result.data] if result.data else []
 
+async def get_product_colors(product_id: str) -> List[ProductColor]:
+    """Fetch all color options for a product."""
+    query = supabase.table("product_colors").select("*").eq("product_id", product_id)
+    result = await async_supabase_query(query)
+    return [ProductColor(**row) for row in result.data] if result.data else []
 
 async def get_product_variants(product_id: str) -> List[ProductVariant]:
     """Fetch all variants for a product."""
@@ -160,7 +155,6 @@ async def get_product_variants(product_id: str) -> List[ProductVariant]:
     result = await async_supabase_query(query)
 
     return [ProductVariant(**row) for row in result.data] if result.data else []
-
 
 async def get_product_addons(
     product_id: str,
@@ -177,6 +171,69 @@ async def get_product_addons(
 
     return [ProductAddon(**row) for row in result.data] if result.data else []
 
+async def get_product_materials(
+    product_id: str,
+    sustainable_only: bool = False
+) -> List[ProductMaterial]:
+    """Fetch materials for a product, optionally filtered by sustainability."""
+    query = supabase.table("product_materials").select("*").eq("product_id", product_id)
+
+    if sustainable_only:
+        query = query.eq("is_sustainable", True)
+
+    result = await async_supabase_query(query)
+    return [ProductMaterial(**row) for row in result.data] if result.data else []
+
+async def get_product_dimensions(
+    product_id: str,
+    variant_name: Optional[str] = None
+) -> List[ProductDimension]:
+    """Fetch dimensions for a product, optionally filtered by variant."""
+    query = supabase.table("product_dimensions").select("*").eq("product_id", product_id)
+
+    if variant_name:
+        query = query.eq("variant_name", variant_name)
+
+    result = await async_supabase_query(query)
+    return [ProductDimension(**row) for row in result.data] if result.data else []
+
+async def get_size_recommendation(
+    product_name: str,
+    user_height: float,  # in inches
+    user_weight: float   # in pounds
+) -> Dict[str, Any]:
+    """
+    Recommend chair size based on user height and weight.
+    Currently implements Aeron sizing logic.
+    """
+    # Aeron sizing rules
+    if "aeron" in product_name.lower():
+        if user_height < 64 or user_weight < 130:  # 5'4" / 130 lbs
+            recommended_size = "Size A"
+            explanation = "Recommended for users under 5'4\" and 130 lbs"
+        elif user_height > 78 or user_weight > 230:  # 6'6" / 230 lbs
+            recommended_size = "Size C"
+            explanation = "Recommended for users over 6'6\" or 230 lbs"
+        else:
+            recommended_size = "Size B"
+            explanation = "Recommended for users 5'4\" - 6'6\" and 130-230 lbs (fits 95% of people)"
+
+        return {
+            "product": product_name,
+            "recommended_size": recommended_size,
+            "explanation": explanation,
+            "user_height": user_height,
+            "user_weight": user_weight
+        }
+
+    # Other products don't have size variants
+    return {
+        "product": product_name,
+        "recommended_size": "Standard (one size fits most)",
+        "explanation": f"{product_name} is designed to fit users 5'0\" - 6'5\"",
+        "user_height": user_height,
+        "user_weight": user_weight
+    }
 
 async def calculate_configuration_price(
     variant_id: str,
@@ -219,125 +276,37 @@ async def calculate_configuration_price(
     )
 
 
-async def get_product_colors(product_id: str) -> List[ProductColor]:
-    """Fetch all color options for a product."""
-    query = supabase.table("product_colors").select("*").eq("product_id", product_id)
-    result = await async_supabase_query(query)
-    return [ProductColor(**row) for row in result.data] if result.data else []
-
-
-async def get_product_materials(
-    product_id: str,
-    sustainable_only: bool = False
-) -> List[ProductMaterial]:
-    """Fetch materials for a product, optionally filtered by sustainability."""
-    query = supabase.table("product_materials").select("*").eq("product_id", product_id)
-
-    if sustainable_only:
-        query = query.eq("is_sustainable", True)
-
-    result = await async_supabase_query(query)
-    return [ProductMaterial(**row) for row in result.data] if result.data else []
-
-
-async def get_product_dimensions(
-    product_id: str,
-    variant_name: Optional[str] = None
-) -> List[ProductDimension]:
-    """Fetch dimensions for a product, optionally filtered by variant."""
-    query = supabase.table("product_dimensions").select("*").eq("product_id", product_id)
-
-    if variant_name:
-        query = query.eq("variant_name", variant_name)
-
-    result = await async_supabase_query(query)
-    return [ProductDimension(**row) for row in result.data] if result.data else []
-
-
-async def get_size_recommendation(
-    product_name: str,
-    user_height: float,  # in inches
-    user_weight: float   # in pounds
-) -> Dict[str, Any]:
-    """
-    Recommend chair size based on user height and weight.
-    Currently implements Aeron sizing logic.
-    """
-    # Aeron sizing rules
-    if "aeron" in product_name.lower():
-        if user_height < 64 or user_weight < 130:  # 5'4" / 130 lbs
-            recommended_size = "Size A"
-            explanation = "Recommended for users under 5'4\" and 130 lbs"
-        elif user_height > 78 or user_weight > 230:  # 6'6" / 230 lbs
-            recommended_size = "Size C"
-            explanation = "Recommended for users over 6'6\" or 230 lbs"
-        else:
-            recommended_size = "Size B"
-            explanation = "Recommended for users 5'4\" - 6'6\" and 130-230 lbs (fits 95% of people)"
-
-        return {
-            "product": product_name,
-            "recommended_size": recommended_size,
-            "explanation": explanation,
-            "user_height": user_height,
-            "user_weight": user_weight
-        }
-
-    # Other products don't have size variants
-    return {
-        "product": product_name,
-        "recommended_size": "Standard (one size fits most)",
-        "explanation": f"{product_name} is designed to fit users 5'0\" - 6'5\"",
-        "user_height": user_height,
-        "user_weight": user_weight
-    }
-
-
 # ============================================================================
-# LangChain Tool Wrappers (Agent Interface)
+# LLM Tool Functions (Formatted for Agent Consumption)
 # ============================================================================
 
-@tool(parse_docstring=True)
-def search_products_by_price(
-    min_price: float,
-    max_price: float,
-    price_tier: Annotated[Optional[str], InjectedToolArg] = None
-) -> str:
-    """Search for products within a specific price range.
+@tool
+async def get_product_catalog() -> str:
+    """Get all available products with their basic information and base prices.
 
-    Use this when users ask about budget, affordability, or price comparisons.
-    Returns products with their variants and base prices.
+    Use this tool to:
+    - Show all available products to the customer
+    - Get an overview of the product catalog
+    - Find product IDs for further detailed queries
 
-    Args:
-        min_price: Minimum price in dollars (e.g., 500)
-        max_price: Maximum price in dollars (e.g., 1500)
-        price_tier: Optional filter by tier ('budget', 'mid-range', 'premium', 'luxury')
-
-    Returns:
-        Formatted string with products and their price options
+    Returns a formatted string with product name, price tier, design style, and base price.
     """
-    results = asyncio.run(search_products_by_price_range(min_price, max_price, price_tier))
+    products = await get_all_products()
+    variants = await get_all_products_with_price()
 
-    if not results:
-        return f"No products found in the ${min_price}-${max_price} range."
+    # Create a mapping of product_id to base price
+    price_map = {v.product_id: v.base_price for v in variants}
 
-    # Format output
-    output = f"Products available between ${min_price} and ${max_price}:\n\n"
+    result = "# Product Catalog\n\n"
+    for product in products:
+        base_price = price_map.get(product.id, "N/A")
+        result += f"**{product.name}**\n"
+        result += f"  - Price Tier: {product.price_tier}\n"
+        result += f"  - Design Style: {product.design_style}\n"
+        result += f"  - Base Price: ${base_price}\n"
+        result += f"  - Product ID: {product.id}\n\n"
 
-    current_product = None
-    for item in results:
-        product_info = item.get("products", {})
-        product_name = product_info.get("name", "Unknown")
-
-        if product_name != current_product:
-            current_product = product_name
-            output += f"\n**{product_name}**\n"
-            if product_info.get("price_tier"):
-                output += f"  Tier: {product_info['price_tier']}\n"
-
-        output += f"  - {item['variant_name']}: ${item['base_price']}\n"
-
-    return output
+    return result
 
 
 @tool(parse_docstring=True)
@@ -350,7 +319,7 @@ def get_product_details(product_name: str) -> str:
         product_name: Name of the product (e.g., "Aeron Chair", "Cosm Chair")
 
     Returns:
-        Formatted string with product details including variants and options
+        Formatted string with product details including price tier, design style, variants, colors, and materials
     """
     product = asyncio.run(get_product_by_name(product_name))
 
@@ -390,56 +359,85 @@ def get_product_details(product_name: str) -> str:
     return output
 
 
-@tool(parse_docstring=True)
-def get_chair_configuration_price(
-    product_name: str,
-    variant_name: str,
-    addon_names: List[str]
-) -> str:
-    """Calculate the total price for a specific chair configuration.
 
-    Use this when users want to build a custom configuration or understand pricing.
+@tool
+async def get_all_base_prices() -> str:
+    """Get the base prices for all products in their default configurations.
+
+    Use this tool when:
+    - Customer asks about pricing across multiple products
+    - You need to compare prices between products
+    - Customer has a budget constraint and wants to see options
+
+    Returns formatted list of products with their starting prices.
+    """
+    products = await get_all_products()
+    variants = await get_all_products_with_price()
+
+    # Create a mapping of product_id to variant details
+    variant_map = {v.product_id: v for v in variants}
+
+    result = "# Base Prices (Default Configuration)\n\n"
+
+    # Sort by price
+    products_with_prices = []
+    for product in products:
+        variant = variant_map.get(product.id)
+        if variant:
+            products_with_prices.append((product, variant))
+
+    products_with_prices.sort(key=lambda x: x[1].base_price)
+
+    for product, variant in products_with_prices:
+        result += f"**{product.name}**\n"
+        result += f"  - Starting at: ${variant.base_price}\n"
+        result += f"  - Configuration: {variant.variant_name}\n"
+        result += f"  - Price Tier: {product.price_tier}\n\n"
+
+    return result
+
+
+@tool
+async def get_product_unique_features(product_name: str) -> str:
+    """Get the unique and standout features that differentiate this product.
 
     Args:
-        product_name: Name of the product (e.g., "Aeron Chair")
-        variant_name: Variant name (e.g., "Size B")
-        addon_names: List of addon names (e.g., ["Adjustable Arms", "Forward Tilt"])
+        product_name: The exact name of the product
 
-    Returns:
-        Formatted price breakdown with itemized costs
+    Use this tool when:
+    - Customer wants to know what makes a product special
+    - You need to highlight key differentiators
+    - Customer is comparing products and needs decision-making information
+
+    Returns the most distinctive features and capabilities.
     """
-    # Get product
-    product = asyncio.run(get_product_by_name(product_name))
+    product = await get_product_by_name(product_name)
     if not product:
-        return f"Product '{product_name}' not found."
+        return f"Product '{product_name}' not found in catalog."
 
-    # Get variant
-    variants = asyncio.run(get_product_variants(product.id))
-    variant = next((v for v in variants if v.variant_name == variant_name), None)
-    if not variant:
-        return f"Variant '{variant_name}' not found for {product_name}."
+    features = await get_product_features_by_product_id(product.id)
 
-    # Get addons
-    all_addons = asyncio.run(get_product_addons(product.id))
-    addon_ids = [a.id for a in all_addons if a.addon_name in addon_names]
+    result = f"# What Makes {product.name} Unique\n\n"
 
-    # Calculate price
-    breakdown = asyncio.run(calculate_configuration_price(variant.id, addon_ids))
+    # Prioritize standard features (core to the product identity)
+    standard_features = [f for f in features if f.is_standard and f.description]
+    optional_features = [f for f in features if not f.is_standard and f.description]
 
-    # Format output
-    output = f"**{product_name} - {breakdown.variant_name}**\n\n"
-    output += f"Base Price: ${breakdown.base_price:.2f}\n\n"
+    if standard_features:
+        result += "**Core Features**\n"
+        for feature in standard_features:
+            result += f"  • **{feature.feature_name}**: {feature.description}\n"
+        result += "\n"
 
-    if breakdown.addons:
-        output += "Add-ons:\n"
-        for addon in breakdown.addons:
-            output += f"  - {addon['name']}: +${addon['price']:.2f}\n"
-        output += "\n"
+    if optional_features:
+        result += "**Customization Options**\n"
+        for feature in optional_features:
+            result += f"  • **{feature.feature_name}**: {feature.description}\n"
+        result += "\n"
 
-    output += f"**Total: ${breakdown.total_price:.2f}**"
+    result += f"\n*Design Philosophy: {product.design_style} | {product.brand_line}*"
 
-    return output
-
+    return result
 
 @tool(parse_docstring=True)
 def get_size_recommendation_for_user(
@@ -470,100 +468,55 @@ def get_size_recommendation_for_user(
 
     return output
 
-
 @tool(parse_docstring=True)
-def list_all_products() -> str:
-    """List all available products in the catalog.
+def get_chair_configuration_price(
+    product_name: str,
+    variant_name: str,
+    addon_names: List[str]
+) -> str:
+    """Calculate the total price for a specific chair configuration.
 
-    Use this for general browsing or when user asks "what do you have?" or "show me all chairs".
-
-    Returns:
-        Formatted list of all products with basic info
-    """
-    products = asyncio.run(get_all_products())
-
-    if not products:
-        return "No products found in catalog."
-
-    output = "**Herman Miller Office Chairs:**\n\n"
-    for p in products:
-        output += f"**{p.name}**"
-        if p.price_tier:
-            output += f" ({p.price_tier})"
-        output += "\n"
-
-    output += f"\nTotal: {len(products)} chairs available"
-
-    return output
-
-
-@tool(parse_docstring=True)
-def get_sustainable_options(product_name: str) -> str:
-    """Get information about sustainable materials for a specific product.
-
-    Use this when users ask about sustainability, eco-friendly options, or environmental impact.
+    Use this when users want to build a custom configuration or understand pricing.
 
     Args:
         product_name: Name of the product (e.g., "Aeron Chair")
+        variant_name: Variant name (e.g., "Size B")
+        addon_names: List of addon names (e.g., ["Adjustable Arms", "Forward Tilt"])
 
     Returns:
-        List of sustainable materials and components
+        Formatted price breakdown with itemized costs
     """
+    # Get product
     product = asyncio.run(get_product_by_name(product_name))
     if not product:
         return f"Product '{product_name}' not found."
 
-    materials = asyncio.run(get_product_materials(product.id, sustainable_only=True))
+    # Get variant
+    variants = asyncio.run(get_product_variants(product.id))
+    print(variants)
+    variant = next((v for v in variants if v.variant_name == variant_name), None)
+    if not variant:
+        return f"Variant '{variant_name}' not found for {product_name}."
 
-    if not materials:
-        return f"No specific sustainable materials information available for {product_name}."
+    # Get addons
+    all_addons = asyncio.run(get_product_addons(product.id))
+    print(all_addons)
+    addon_ids = [a.id for a in all_addons if a.addon_name in addon_names]
 
-    output = f"**Sustainable Materials in {product_name}:**\n\n"
-    for m in materials:
-        output += f"**{m.component}**: {m.material}\n"
-        if m.description:
-            output += f"  {m.description}\n"
+    # Calculate price
+    breakdown = asyncio.run(calculate_configuration_price(variant.id, addon_ids))
+    print(breakdown)
+
+    # Format output
+    output = f"**{product_name} - {breakdown.variant_name}**\n\n"
+    output += f"Base Price: ${breakdown.base_price:.2f}\n\n"
+
+    if breakdown.addons:
+        output += "Add-ons:\n"
+        for addon in breakdown.addons:
+            output += f"  - {addon['name']}: +${addon['price']:.2f}\n"
+        output += "\n"
+
+    output += f"**Total: ${breakdown.total_price:.2f}**"
 
     return output
-
-
-# ============================================================================
-# Helper Tools
-# ============================================================================
-def get_today_str() -> str:
-    """Get current date in a human-readable format."""
-    return datetime.now().strftime("%a %b %-d, %Y")
-
-def convert_feet_to_inches(height_feet: float, height_inches: float = 0) -> float:
-    """Convert height from feet and inches to total inches.
-    
-    Args:
-        height_feet: Height in feet (e.g., 5)
-        height_inches: Additional inches (e.g., 9 for 5'9"), defaults to 0
-    
-    Returns:
-        Total height in inches
-    """
-    return height_feet * 12 + height_inches
-
-def convert_m_to_inches(height_m: float) -> float:
-    """Convert height from meters to inches.
-    
-    Args:
-        height_m: Height in meters (e.g., 1.75)
-    
-    Returns:
-        Height in inches
-    """
-    return height_m * 39.3701
-
-def convert_kg_to_pounds(weight_kg: float) -> float:
-    """Convert weight from kilograms to pounds.
-    
-    Args:
-        weight_kg: Weight in kilograms (e.g., 80)
-    
-    Returns:
-        Weight in pounds
-    """
-    return weight_kg * 2.20462

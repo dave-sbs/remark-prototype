@@ -5,6 +5,12 @@ Manually verify the results match your actual data.
 """
 
 import asyncio
+import sys
+from pathlib import Path
+
+# Add parent directory to path so we can import semantic_queries
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from structured_queries import (
     search_products_by_price,
     get_product_details,

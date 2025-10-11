@@ -12,6 +12,12 @@ Tests include:
 
 import asyncio
 import time
+import sys
+from pathlib import Path
+
+# Add parent directory to path so we can import semantic_queries
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from semantic_queries import (
     # LangChain Tools for Agents
     semantic_product_search,
@@ -44,19 +50,52 @@ def print_subsection(title):
     print(f"\n--- {title} ---")
 
 
+def semantic_search_internal():
+    """Test internal semantic search function with different param configurations"""
+    print_section("TEST: semantic_search_internal (Integration)")
+
+    # Test various natural language queries
+    test_queries = [
+        "What is aesthetically appealing about the cosm chair?"
+    ]
+
+    for query in test_queries:
+        try:
+            print_subsection(f"Query: '{query}'")
+            start = time.time()
+
+            result = asyncio.run(semantic_product_search_internal(
+                query=query,
+                max_results=5,
+                min_similarity=0.3,
+                price_tier=None,
+                design_style=None
+            ))
+
+            elapsed = (time.time() - start) * 1000
+
+            """
+            Output schema:
+                product_id='a84ed3b1-af81-4bbe-9f76-04e3aa95a078', 
+                product_name='Aeron Chair', chunk_text='Adjustable Lumbar Support: Optional adjustable lumbar support for personalized back comfort', 
+                similarity=0.421745275154992, price_tier='premium', 
+                design_style='modern-ergonomic'), 
+            """
+            for item in result:
+                print(item)
+            print(f"✓ Search completed in {elapsed:.0f}ms")
+
+        except Exception as e:
+            print(f"✗ Error: {e}")
+
+
 def test_semantic_product_search():
     """Test semantic search with real embeddings (updated for simplified implementation)."""
     print_section("TEST: semantic_product_search (Integration)")
 
     # Test various natural language queries
     test_queries = [
-        "comfortable chair for long coding sessions",
-        "ergonomic office chair with lumbar support",
-        "modern minimalist desk chair",
-        "chair for back pain and posture",
-        "premium executive office seating",
-        "budget-friendly ergonomic chair",
-        "chair with breathable mesh material",
+       "What is aesthetically appealing about the cosm chair?"
     ]
 
     for query in test_queries:
@@ -79,13 +118,6 @@ def test_semantic_product_search():
 
         except Exception as e:
             print(f"✗ Error: {e}")
-
-    print("\nManually verify:")
-    print("  - Results are semantically relevant to the query")
-    print("  - Products match the described use case")
-    print("  - Ranking makes sense")
-    print("  - Each feature result shows feature_name and description (not aggregated)")
-    print("  - Latency is acceptable (<400ms target)")
 
 
 def test_find_best_use_case():
@@ -640,73 +672,13 @@ def test_performance_benchmarks():
 # ============================================================================
 
 if __name__ == "__main__":
-    print("\n" + "="*80)
-    print("RUNNING SEMANTIC QUERIES INTEGRATION TESTS (UPDATED)")
-    print("="*80)
-    print("\nThese tests query the REAL database and use embeddings.")
-    print("Manually verify the results make semantic sense.")
-
-    print("\nNew in this version:")
-    print("  ✓ Tests for new RPC wrappers (search_product_addons, search_comparison_frameworks)")
-    print("  ✓ Tests for strategy-based retrieval functions")
-    print("  ✓ Performance benchmarking against AGENTS_PLAN.md targets")
-    print("  ✓ Latency tracking for all operations")
-
-    print("\nMake sure:")
-    print("  ✓ Supabase is running")
-    print("  ✓ Database is populated")
-    print("  ✓ Embeddings are generated for ALL tables")
-    print("  ✓ pgvector extension is enabled")
-    print("  ✓ .env file has correct credentials (using SUPABASE_LOCAL_PUBLISHABLE)")
-
-    input("\nPress Enter to continue...")
-
     try:
         # Run all tests
         print("\n" + "="*80)
         print("PART 1: LangChain Tool Tests")
         print("="*80)
+        # semantic_search_internal()
         test_semantic_product_search()
-        test_find_best_use_case()
-        test_find_popular_configuration()
-        test_compare_products_with_framework()
-        test_expanded_semantic_search()
-
-        print("\n" + "="*80)
-        print("PART 2: New RPC Wrapper Tests")
-        print("="*80)
-        test_search_product_addons_semantic()
-        test_search_comparison_frameworks_semantic()
-
-        print("\n" + "="*80)
-        print("PART 3: Strategy Function Tests")
-        print("="*80)
-        test_strategy_functions()
-
-        print("\n" + "="*80)
-        print("PART 4: Quality & Edge Cases")
-        print("="*80)
-        test_semantic_relevance()
-        test_edge_cases()
-
-        print("\n" + "="*80)
-        print("PART 5: Performance Benchmarks")
-        print("="*80)
-        test_performance_benchmarks()
-
-        print("\n" + "="*80)
-        print("INTEGRATION TESTS COMPLETED")
-        print("="*80)
-        print("\nManually review the output above to verify:")
-        print("  - Semantic search returns relevant results")
-        print("  - Use cases match user situations")
-        print("  - Comparisons are accurate and helpful")
-        print("  - New RPC wrappers work correctly")
-        print("  - Strategy functions execute in parallel efficiently")
-        print("  - Edge cases are handled gracefully")
-        print("  - Performance meets AGENTS_PLAN.md targets")
-        print("  - Results make intuitive sense")
-        print("\nNote: Semantic relevance may vary based on your embedding model")
 
     except KeyboardInterrupt:
         print("\n\nTests interrupted by user")

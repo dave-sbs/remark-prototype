@@ -132,6 +132,11 @@ async def async_supabase_rpc(function_name: str, params: Dict[str, Any]):
         lambda: supabase.rpc(function_name, params).execute()
     )
 
+async def async_supabase_query(query_builder):
+    """Execute Supabase query asynchronously."""
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, lambda: query_builder.execute())
+
 
 # ============================================================================
 # Core Semantic Search Functions
@@ -139,8 +144,8 @@ async def async_supabase_rpc(function_name: str, params: Dict[str, Any]):
 
 async def semantic_product_search_internal(
     query: str,
-    max_results: int = 10,
-    min_similarity: float = 0.7,
+    max_results: int = 5,
+    min_similarity: float = 0.3,
     price_tier: Optional[str] = None,
     design_style: Optional[str] = None
 ) -> List[SemanticSearchResult]:
@@ -197,7 +202,7 @@ async def semantic_product_search_internal(
 async def find_use_case_scenarios(
     user_query: str,
     max_results: int = 5,
-    min_similarity: float = 0.75
+    min_similarity: float = 0.3
 ) -> List[UseCaseMatch]:
     """
     Match user query to pre-defined use case scenarios.
@@ -293,12 +298,12 @@ async def search_product_configurations(
         for row in result.data
     ]
 
-
+# Currently this table doesn't have the embeddings
 async def search_product_addons_semantic(
     query: str,
     product_id: Optional[str] = None,
     max_results: int = 10,
-    min_similarity: float = 0.7
+    min_similarity: float = 0.3
 ) -> List[AddonMatch]:
     """
     Search product addons using semantic similarity.
@@ -350,7 +355,7 @@ async def search_product_addons_semantic(
 async def search_comparison_frameworks_semantic(
     query: str,
     max_results: int = 5,
-    min_similarity: float = 0.7
+    min_similarity: float = 0.3
 ) -> List[ComparisonFramework]:
     """
     Search comparison frameworks using semantic similarity.
@@ -409,15 +414,15 @@ async def find_comparison_framework(
     sorted_ids = sorted(product_ids)
 
     # Query comparison frameworks table
-    result = supabase.table("comparison_frameworks").select("*").contains(
+    result = await async_supabase_query(supabase.table("comparison_frameworks").select("*").contains(
         "products_compared", sorted_ids
-    ).execute()
+    ))
 
     if not result.data:
         return None
 
     # Return first matching framework
-    row = result.data[0]
+    row = result.data[0] if result.data else None
 
     return ComparisonFramework(
         framework_id=row.get("id"),
@@ -432,7 +437,9 @@ async def find_comparison_framework(
 # Strategy-Based Retrieval Functions (Aligned with AGENTS_PLAN.md)
 # ============================================================================
 
-async def get_product_full_details(product_id: str) -> Dict[str, Any]:
+async def get_product_full_details(
+    product_id: str
+) -> Dict[str, Any]:
     """
     Strategy D: Rich Context - Parallel fetch everything about a product.
     Target latency: 200-300ms with parallel execution.
@@ -461,7 +468,9 @@ async def get_product_full_details(product_id: str) -> Dict[str, Any]:
     }
 
 
-async def strategy_comparison_lookup(product_names: List[str]) -> Dict[str, Any]:
+async def strategy_comparison_lookup(
+    product_names: List[str]
+) -> Dict[str, Any]:
     """
     Strategy B: Comparison Lookup - Parallel framework + product details.
     Target latency: 200-400ms with parallel execution.
@@ -500,7 +509,9 @@ async def strategy_comparison_lookup(product_names: List[str]) -> Dict[str, Any]
     }
 
 
-async def strategy_scenario_match(user_query: str) -> Dict[str, Any]:
+async def strategy_scenario_match(
+    user_query: str
+) -> Dict[str, Any]:
     """
     Strategy C: Scenario Match - Semantic search → enrich with product data.
     Target latency: 300-500ms (embedding + search + parallel product fetch).
@@ -671,7 +682,7 @@ async def multi_query_semantic_search(
 @tool(parse_docstring=True)
 def semantic_product_search(
     query: str,
-    max_results: Annotated[int, InjectedToolArg] = 10,
+    max_results: Annotated[int, InjectedToolArg] = 5,
     price_tier: Annotated[Optional[str], InjectedToolArg] = None
 ) -> str:
     """Search products using natural language with vector similarity.
@@ -693,7 +704,7 @@ def semantic_product_search(
 
     Args:
         query: Natural language description of what the user is looking for
-        max_results: Maximum number of products to return (default 10)
+        max_results: Maximum number of products to return (default 5)
         price_tier: Optional filter by price tier ('budget', 'mid-range', 'premium', 'luxury')
 
     Returns:
