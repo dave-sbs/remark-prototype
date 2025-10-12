@@ -10,15 +10,36 @@ import {
 } from '@/lib/agent-tools'
 import { getThreadState, updateThreadState } from '@/lib/agent-state'
 import { SALES_AGENT_PROMPT } from '@/lib/prompts'
+import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
 export async function POST(req: Request) {
     const { messages, threadId } = await req.json()
 
+    // Initialize Supabase client for logging
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
     // Use threadId or create temporary one
     const activeThreadId = threadId || crypto.randomUUID()
     const state = getThreadState(activeThreadId)
+
+    // Log thread activity
+    const clientIP = req.headers.get('x-forwarded-for') ||
+        req.headers.get('x-real-ip') ||
+        'unknown'
+    const userAgent = req.headers.get('user-agent') || 'unknown'
+
+    await supabase.from('chat_threads').upsert({
+        thread_id: activeThreadId,
+        ip_address: clientIP,
+        user_agent: userAgent,
+        last_activity_at: new Date().toISOString(),
+        status: 'active'
+    }, { onConflict: 'thread_id' })
 
     // Pre-load product catalog on first message 
     if (!state.productCatalogContext) {
@@ -79,6 +100,26 @@ export async function POST(req: Request) {
         },
         temperature: 0.7,
     })
+
+    // Log messages to database for tracing
+    const baseSequenceNum = await supabase
+        .from('chat_messages')
+        .select('sequence_number', { count: 'exact' })
+        .eq('thread_id', activeThreadId)
+        .then(res => (res.count || 0))
+
+    for (let i = 0; i < messages.length; i++) {
+        const msg = messages[i]
+        await supabase.from('chat_messages').insert({
+            thread_id: activeThreadId,
+            message_id: msg.id,
+            role: msg.role,
+            content: msg.content,
+            sequence_number: baseSequenceNum + i,
+            agent_state: state,
+            model_used: 'gpt-4.1-mini'
+        })
+    }
 
     // Return UIMessage stream response (AI SDK 5)
     return result.toUIMessageStreamResponse({

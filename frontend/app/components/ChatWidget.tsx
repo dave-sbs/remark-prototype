@@ -11,11 +11,51 @@ export default function ChatWidget() {
     const [fallbackInput, setFallbackInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [threadId, setThreadId] = useState<string>()
+    const [lastActivity, setLastActivity] = useState(Date.now())
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-    // Generate thread ID on mount
+    // Thread management constants
+    const THREAD_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
+    const STORAGE_THREAD_KEY = 'remark_chat_thread'
+    const STORAGE_ACTIVITY_KEY = 'remark_last_activity'
+
+    // Thread initialization/recovery logic
     useEffect(() => {
-        setThreadId(crypto.randomUUID())
+        const storedThreadId = localStorage.getItem(STORAGE_THREAD_KEY)
+        const storedActivity = localStorage.getItem(STORAGE_ACTIVITY_KEY)
+
+        if (storedThreadId && storedActivity) {
+            const timeSinceLastActivity = Date.now() - parseInt(storedActivity)
+
+            if (timeSinceLastActivity < THREAD_TIMEOUT_MS) {
+                // Resume existing thread
+                setThreadId(storedThreadId)
+                setLastActivity(parseInt(storedActivity))
+            } else {
+                // Thread expired, start new
+                startNewThread()
+            }
+        } else {
+            // No existing thread, start new
+            startNewThread()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // Check for timeout every minute
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const storedActivity = localStorage.getItem(STORAGE_ACTIVITY_KEY)
+            if (storedActivity) {
+                const timeSince = Date.now() - parseInt(storedActivity)
+                if (timeSince >= THREAD_TIMEOUT_MS) {
+                    startNewThread()
+                }
+            }
+        }, 60000) // Check every minute
+
+        return () => clearInterval(interval)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Reset textarea height when input is empty
@@ -29,6 +69,15 @@ export default function ChatWidget() {
         // @ts-expect-error - AI SDK v5 types not fully updated yet, but body parameter works as documented
         body: { threadId },
     })
+
+    const startNewThread = () => {
+        const newThreadId = crypto.randomUUID()
+        setThreadId(newThreadId)
+        const now = Date.now()
+        setLastActivity(now)
+        localStorage.setItem(STORAGE_THREAD_KEY, newThreadId)
+        localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
+    }
 
     return (
         <>
@@ -85,6 +134,11 @@ export default function ChatWidget() {
                                 setFallbackInput(input)
                                 setInput('')
                                 await sendMessage({ text: input })
+
+                                // Update activity timestamp
+                                const now = Date.now()
+                                setLastActivity(now)
+                                localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
                             } catch (error) {
                                 setInput(fallbackInput)
                                 console.error('Failed to send message:', error)
