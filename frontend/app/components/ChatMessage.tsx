@@ -1,3 +1,5 @@
+import { extractMessageContent } from '@/lib/message-utils'
+
 type MessagePart = {
     type: string
     text?: string
@@ -13,17 +15,15 @@ export default function ChatMessage({ message }: { message: Message }) {
     const isUser = message.role === 'user'
 
     // Extract text content from parts
-    const content = message.parts
-        ?.map(part => part.type === 'text' ? part.text : '')
-        .join('') || ''
+    const content = extractMessageContent(message)
 
     return (
         <div className={`flex ${isUser ? 'flex-row-reverse' : 'flex-row'} gap-2 items-end`}>
             <div className={`
         max-w-[80%] px-4 py-3 text-sm
         ${isUser
-                    ? 'bg-[#2b2b2b] text-white rounded-2xl rounded-br-md'
-                    : 'bg-[#f5f1eb] text-gray-900 rounded-2xl rounded-bl-md'
+                    ? 'bg-blue-600 text-white rounded-3xl rounded-br-sm'
+                    : 'bg-gray-200 text-black rounded-3xl rounded-bl-sm'
                 }
       `}>
                 <div className="whitespace-pre-wrap break-words overflow-wrap-anywhere">

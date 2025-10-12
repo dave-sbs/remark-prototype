@@ -11,17 +11,28 @@ import {
 import { getThreadState, updateThreadState } from '@/lib/agent-state'
 import { SALES_AGENT_PROMPT } from '@/lib/prompts'
 import { createClient } from '@supabase/supabase-js'
+import { extractMessageContent, extractToolCalls, extractToolResults } from '@/lib/message-utils'
+import { UIMessage } from 'ai';
 
 export const maxDuration = 30
 
 export async function POST(req: Request) {
-    const { messages, threadId } = await req.json()
+    const { messages, threadId }: { messages: UIMessage[], threadId: string } = await req.json();
 
     // Initialize Supabase client for logging
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
+
+    // Validate messages array
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+        console.error('[API /chat] ❌ Invalid messages array:', messages)
+        return new Response(JSON.stringify({ error: 'Invalid messages array' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+        })
+    }
 
     // Use threadId or create temporary one
     const activeThreadId = threadId || crypto.randomUUID()
@@ -99,27 +110,98 @@ export async function POST(req: Request) {
             get_chair_configuration_price: getChairConfigurationPrice,
         },
         temperature: 0.7,
+        onFinish: async (event) => {
+            console.log('[API /chat] 🤖 onFinish: Streaming complete, logging assistant response')
+            console.log('[API /chat] Response text length:', event.text?.length || 0)
+            console.log('[API /chat] Tool calls:', event.toolCalls?.length || 0)
+            console.log('[API /chat] Tool results:', event.toolResults?.length || 0)
+
+            // Log the assistant's response after streaming completes
+            const { data: lastMessage } = await supabase
+                .from('chat_messages')
+                .select('sequence_number')
+                .eq('thread_id', activeThreadId)
+                .order('sequence_number', { ascending: false })
+                .limit(1)
+                .single()
+
+            const nextSequenceNum = lastMessage?.sequence_number ? lastMessage.sequence_number + 1 : 0
+
+            // Extract content from response
+            const content = event.text || ''
+            const toolCalls = event.toolCalls ? JSON.parse(JSON.stringify(event.toolCalls)) : null
+            const toolResults = event.toolResults ? JSON.parse(JSON.stringify(event.toolResults)) : null
+
+            const assistantMessageId = crypto.randomUUID()
+
+            await supabase.from('chat_messages').insert({
+                thread_id: activeThreadId,
+                message_id: assistantMessageId,
+                role: 'assistant',
+                content: content,
+                tool_calls: toolCalls,
+                tool_results: toolResults,
+                sequence_number: nextSequenceNum,
+                agent_state: state,
+                model_used: 'gpt-4.1-mini',
+                tokens_used: event.usage?.totalTokens || null
+            })
+
+        }
     })
 
-    // Log messages to database for tracing
-    const baseSequenceNum = await supabase
+    // Get the last sequence number for this thread
+    const { data: lastMessage } = await supabase
         .from('chat_messages')
-        .select('sequence_number', { count: 'exact' })
+        .select('sequence_number')
         .eq('thread_id', activeThreadId)
-        .then(res => (res.count || 0))
+        .order('sequence_number', { ascending: false })
+        .limit(1)
+        .single()
 
-    for (let i = 0; i < messages.length; i++) {
-        const msg = messages[i]
+    const baseSequenceNum = lastMessage?.sequence_number ? lastMessage.sequence_number + 1 : 0
+
+    // Get already-logged message IDs to avoid duplicates
+    const { data: existingMessages } = await supabase
+        .from('chat_messages')
+        .select('message_id')
+        .eq('thread_id', activeThreadId)
+
+    const existingMessageIds = new Set(existingMessages?.map(m => m.message_id) || [])
+
+    // Only log NEW messages
+    const newMessages = messages.filter((msg: any) => !existingMessageIds.has(msg.id))
+
+    // Log new messages with proper content extraction
+    for (let i = 0; i < newMessages.length; i++) {
+        const msg = newMessages[i]
+        const content = extractMessageContent(msg)
+        const toolCalls = extractToolCalls(msg)
+        const toolResults = extractToolResults(msg)
+
+        console.log('[API /chat] 📝 Inserting message:', {
+            message_id: msg.id,
+            role: msg.role,
+            content: content.substring(0, 50) + '...',
+            has_tool_calls: !!toolCalls,
+            has_tool_results: !!toolResults,
+            sequence: baseSequenceNum + i
+        })
+
         await supabase.from('chat_messages').insert({
             thread_id: activeThreadId,
             message_id: msg.id,
             role: msg.role,
-            content: msg.content,
+            content: content,
+            tool_calls: toolCalls,
+            tool_results: toolResults,
             sequence_number: baseSequenceNum + i,
             agent_state: state,
             model_used: 'gpt-4.1-mini'
         })
     }
+
+    console.log('[API /chat] ✅ Database logging complete')
 
     // Return UIMessage stream response (AI SDK 5)
     return result.toUIMessageStreamResponse({

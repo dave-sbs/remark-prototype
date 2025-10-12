@@ -2,59 +2,80 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useChat } from '@ai-sdk/react'
+import { DefaultChatTransport, PrepareSendMessagesRequest } from 'ai';
 import ChatMessage from './ChatMessage'
 import { ArrowUp, CrossIcon, Loader2, MessageCircle, MessageCircleX, X } from 'lucide-react'
 
 export default function ChatWidget() {
-    const [isOpen, setIsOpen] = useState(false)
-    const [input, setInput] = useState('')
-    const [fallbackInput, setFallbackInput] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [threadId, setThreadId] = useState<string>()
-    const [lastActivity, setLastActivity] = useState(Date.now())
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
-
     // Thread management constants
     const THREAD_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
     const STORAGE_THREAD_KEY = 'remark_chat_thread'
     const STORAGE_ACTIVITY_KEY = 'remark_last_activity'
 
-    // Thread initialization/recovery logic
-    useEffect(() => {
-        const storedThreadId = localStorage.getItem(STORAGE_THREAD_KEY)
-        const storedActivity = localStorage.getItem(STORAGE_ACTIVITY_KEY)
+    const [isOpen, setIsOpen] = useState(false)
+    const [input, setInput] = useState('')
+    const [fallbackInput, setFallbackInput] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
 
-        if (storedThreadId && storedActivity) {
-            const timeSinceLastActivity = Date.now() - parseInt(storedActivity)
+    // Initialize threadId immediately (not in useEffect)
+    const [threadId, setThreadId] = useState<string>(() => {
+        console.log('[ChatWidget] Initializing threadId...')
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(STORAGE_THREAD_KEY)
+            const storedActivity = localStorage.getItem(STORAGE_ACTIVITY_KEY)
 
-            if (timeSinceLastActivity < THREAD_TIMEOUT_MS) {
-                // Resume existing thread
-                setThreadId(storedThreadId)
-                setLastActivity(parseInt(storedActivity))
+            console.log('[ChatWidget] localStorage check:', {
+                stored,
+                storedActivity,
+                timeSinceActivity: storedActivity ? Date.now() - parseInt(storedActivity) : null,
+                timeoutThreshold: THREAD_TIMEOUT_MS
+            })
+
+            if (stored && storedActivity) {
+                const timeSince = Date.now() - parseInt(storedActivity)
+                if (timeSince < THREAD_TIMEOUT_MS) {
+                    console.log('[ChatWidget] ✅ RESUMING existing thread:', stored)
+                    return stored // Resume existing thread
+                } else {
+                    console.log('[ChatWidget] ⚠️ Thread expired (inactive for', timeSince, 'ms). Creating new thread.')
+                }
             } else {
-                // Thread expired, start new
-                startNewThread()
+                console.log('[ChatWidget] ⚠️ No existing thread found in localStorage')
             }
-        } else {
-            // No existing thread, start new
-            startNewThread()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        // Create new thread
+        const newId = crypto.randomUUID()
+        console.log('[ChatWidget] 🆕 CREATING NEW THREAD:', newId)
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_THREAD_KEY, newId)
+            localStorage.setItem(STORAGE_ACTIVITY_KEY, Date.now().toString())
+            console.log('[ChatWidget] Saved new thread to localStorage')
+        }
+        return newId
+    })
+
+    const [lastActivity, setLastActivity] = useState(Date.now())
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     // Check for timeout every minute
     useEffect(() => {
+        console.log('[ChatWidget] Setting up timeout checker (checks every 60s)')
         const interval = setInterval(() => {
             const storedActivity = localStorage.getItem(STORAGE_ACTIVITY_KEY)
             if (storedActivity) {
                 const timeSince = Date.now() - parseInt(storedActivity)
+                console.log('[ChatWidget] Timeout check - time since last activity:', timeSince, 'ms')
                 if (timeSince >= THREAD_TIMEOUT_MS) {
+                    console.log('[ChatWidget] ⏰ TIMEOUT DETECTED - calling startNewThread()')
                     startNewThread()
                 }
             }
         }, 60000) // Check every minute
 
-        return () => clearInterval(interval)
+        return () => {
+            console.log('[ChatWidget] Cleaning up timeout checker')
+            clearInterval(interval)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -66,17 +87,34 @@ export default function ChatWidget() {
     }, [input])
 
     const { messages, sendMessage } = useChat({
-        // @ts-expect-error - AI SDK v5 types not fully updated yet, but body parameter works as documented
-        body: { threadId },
-    })
+        transport: new DefaultChatTransport({
+            api: '/api/chat',
+            prepareSendMessagesRequest: (options: any) => {
+                return {
+                    api: options.api,
+                    body: {
+                        messages: options.messages,  // Include messages from options
+                        ...options.body,
+                        threadId: threadId  // Inject our threadId
+                    },
+                    headers: options.headers,
+                    credentials: options.credentials
+                }
+            }
+        })
+    });
 
     const startNewThread = () => {
+        console.log('[ChatWidget] 🔄 startNewThread() called!')
+        console.log('[ChatWidget] Previous threadId:', threadId)
         const newThreadId = crypto.randomUUID()
+        console.log('[ChatWidget] New threadId:', newThreadId)
         setThreadId(newThreadId)
         const now = Date.now()
         setLastActivity(now)
         localStorage.setItem(STORAGE_THREAD_KEY, newThreadId)
         localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
+        console.log('[ChatWidget] Thread reset complete. localStorage updated.')
     }
 
     return (
@@ -95,13 +133,13 @@ export default function ChatWidget() {
             {isOpen && (
                 <div className="fixed bottom-8 right-8 w-full md:w-[420px] max-w-[420px] h-[600px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-50">
                     {/* Header */}
-                    <div className="p-4 flex justify-between items-center bg-white rounded-t-xl">
+                    <div className="p-4 flex justify-between items-center bg-black rounded-t-xl border-b border-gray-200">
                         <div>
-                            <h3 className="font-medium text-lg tracking-tight">Herm & Mills</h3>
+                            <h3 className="font-medium text-lg tracking-tight text-white">Herm & Mills</h3>
                         </div>
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
+                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors text-white hover:text-black"
                         >
                             <X />
                         </button>
@@ -131,6 +169,8 @@ export default function ChatWidget() {
                                 setIsLoading(true)
                                 setFallbackInput(input)
                                 setInput('')
+
+                                // Send message (threadId is included in useChat body config)
                                 await sendMessage({ text: input })
 
                                 // Update activity timestamp
@@ -139,7 +179,7 @@ export default function ChatWidget() {
                                 localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
                             } catch (error) {
                                 setInput(fallbackInput)
-                                console.error('Failed to send message:', error)
+                                console.error('[ChatWidget] ❌ Failed to send message:', error)
                             } finally {
                                 setIsLoading(false)
                             }

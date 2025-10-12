@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* Category Hero Section */}
       <section className="flex-1 pt-8 pb-16 px-8">
-        <div className="max-w-[1600px] mx-auto">
+        <div>
           <div className="flex items-end gap-20 mb-20">
             {/* <div className="text-[140px] leading-none font-bold">
               {filteredProducts.length}
@@ -109,7 +109,7 @@ export default function Home() {
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-20">
             {filteredProducts.map(product => (
               <button
                 key={product.id}
@@ -139,7 +139,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="mt-20">
-        <div className="max-w-[1600px] border-t border-gray-600">
+        <div className="border-t border-gray-600">
           <div className="mx-12 md:mx-32 py-8 md:border-l md:border-r border-gray-600">
             <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-16 px-4">
               <div className="flex flex-col justify-between items-start text-lg font-semibold">
