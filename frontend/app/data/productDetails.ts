@@ -6,9 +6,12 @@ export const productDetailsData: Record<string, ProductDetailData> = {
         number: 'n°0001',
         name: 'Aeron Chair',
         images: [
-            '/product_images/aeron-landing.png',
-            '/product_images/aeron-landing.png', // Add more angles when available
-            '/product_images/aeron-landing.png',
+            '/product_images/aeron/1.jpg',
+            '/product_images/aeron/2.jpg',
+            '/product_images/aeron/3.jpg',
+            '/product_images/aeron/4.jpg',
+            '/product_images/aeron/5.jpg',
+            '/product_images/aeron/6.jpg',
         ],
         description: 'The groundbreaking Aeron Chair redefined office seating with its innovative design and ergonomic features. Created by Don Chadwick and Bill Stumpf, it features a revolutionary 8Z Pellicle suspension material that eliminates heat buildup and conforms to your body. Available in three sizes to fit a wide range of body types.',
         features: [
@@ -39,9 +42,12 @@ export const productDetailsData: Record<string, ProductDetailData> = {
         number: 'n°0002',
         name: 'Cosm Chair',
         images: [
-            '/product_images/cosm-landing.png',
-            '/product_images/cosm-landing.png',
-            '/product_images/cosm-landing.png',
+            '/product_images/cosm/1.jpg',
+            '/product_images/cosm/2.jpg',
+            '/product_images/cosm/3.jpg',
+            '/product_images/cosm/4.jpg',
+            '/product_images/cosm/5.jpg',
+            '/product_images/cosm/6.jpg',
         ],
         description: 'The Cosm Chair offers instant, personalized comfort through its innovative Auto-Harmonic Tilt mechanism. Designed by Studio 7.5, this chair automatically adjusts to your body, requiring no manual adjustments. The Intercept suspension provides balanced support while the leaf springs create a sophisticated, responsive feel.',
         features: [
@@ -72,9 +78,12 @@ export const productDetailsData: Record<string, ProductDetailData> = {
         number: 'n°0003',
         name: 'Eames Aluminum Group Chair',
         images: [
-            '/product_images/eames-landing.png',
-            '/product_images/eames-landing.png',
-            '/product_images/eames-landing.png',
+            '/product_images/eames-aluminum/1.jpg',
+            '/product_images/eames-aluminum/2.jpg',
+            '/product_images/eames-aluminum/3.jpg',
+            '/product_images/eames-aluminum/4.jpg',
+            '/product_images/eames-aluminum/5.jpg',
+            '/product_images/eames-aluminum/6.jpg',
         ],
         description: 'An iconic design by Charles and Ray Eames, the Aluminum Group Chair combines sculptural beauty with exceptional comfort. The die-cast aluminum frame suspends a sling seat that conforms to your body. A timeless classic that brings elegance to any workspace.',
         features: [
@@ -105,9 +114,12 @@ export const productDetailsData: Record<string, ProductDetailData> = {
         number: 'n°0004',
         name: 'Lino Chair',
         images: [
-            '/product_images/lino-landing.png',
-            '/product_images/lino-landing.png',
-            '/product_images/lino-landing.png',
+            '/product_images/lino/1.jpg',
+            '/product_images/lino/2.jpg',
+            '/product_images/lino/3.jpg',
+            '/product_images/lino/4.jpg',
+            '/product_images/lino/5.jpg',
+            '/product_images/lino/6.jpg',
         ],
         description: 'The Lino Chair by Sam Hecht and Kim Colin brings refined simplicity to the workplace. Its clean lines and thoughtful proportions create a chair that works beautifully in any environment. The flexible backrest and contoured seat provide comfort without complexity.',
         features: [

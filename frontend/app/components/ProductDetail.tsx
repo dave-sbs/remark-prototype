@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { X } from 'lucide-react'
 
 export type ProductDetailData = {
     id: string
@@ -37,13 +38,10 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
                     {/* Close Button */}
                     <button
                         onClick={onClose}
-                        className="fixed top-8 right-8 w-12 h-12 flex items-center justify-center hover:bg-black hover:bg-opacity-5 rounded-full transition-colors z-10"
+                        className="fixed top-8 right-8 w-12 h-12 flex items-center justify-center hover:bg-black hover:bg-opacity-5 hover:text-white rounded-full transition-colors z-10"
                         aria-label="Close"
                     >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
+                        <X />
                     </button>
 
                     {/* Image Gallery */}
@@ -53,7 +51,7 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
                                 <button
                                     key={index}
                                     onClick={() => setCurrentImageIndex(index)}
-                                    className={`flex-shrink-0 w-28 h-28 relative bg-[#c5beb3] overflow-hidden transition-all ${currentImageIndex === index ? 'ring-2 ring-black' : 'opacity-60 hover:opacity-100'
+                                    className={`flex-shrink-0 w-28 h-28 relative bg-[#c5beb3] overflow-hidden transition-all ${currentImageIndex === index ? 'border-b-2 border-gray-300 ease-in-out duration-600' : 'opacity-60 hover:opacity-100'
                                         }`}
                                 >
                                     <Image
@@ -68,13 +66,13 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
                         </div>
 
                         {/* Main Image */}
-                        <div className="aspect-[4/3] relative bg-[#c5beb3] overflow-hidden max-w-4xl">
+                        <div className="relative bg-white overflow-hidden flex-shrink-0 max-w-2xl">
                             <Image
                                 src={product.images[currentImageIndex]}
                                 alt={product.name}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 1024px) 100vw, 1024px"
+                                width={600}
+                                height={600}
+                                className="object-cover w-full h-full"
                                 priority
                             />
                         </div>
