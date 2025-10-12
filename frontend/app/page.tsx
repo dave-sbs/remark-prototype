@@ -5,6 +5,7 @@ import Image from 'next/image'
 import ProductDetail from './components/ProductDetail'
 import { productDetailsData } from './data/productDetails'
 import ChatWidget from './components/ChatWidget'
+import { Dot } from 'lucide-react'
 
 type ProductItem = {
   id: string
@@ -20,7 +21,7 @@ const products: ProductItem[] = [
     id: '1',
     number: 'n°0001',
     name: 'Aeron Chair',
-    image: '/product_images/aeron-landing.png',
+    image: '/product_images/landing/aeron.jpg',
     category: 'office chairs',
     status: 'available'
   },
@@ -28,7 +29,7 @@ const products: ProductItem[] = [
     id: '2',
     number: 'n°0002',
     name: 'Cosm Chair',
-    image: '/product_images/cosm-landing.png',
+    image: '/product_images/landing/cosm.jpg',
     category: 'office chairs',
     status: 'available'
   },
@@ -36,7 +37,7 @@ const products: ProductItem[] = [
     id: '3',
     number: 'n°0003',
     name: 'Eames Aluminum Group Chair',
-    image: '/product_images/eames-landing.png',
+    image: '/product_images/landing/eames.jpg',
     category: 'office chairs',
     status: 'available'
   },
@@ -44,7 +45,7 @@ const products: ProductItem[] = [
     id: '4',
     number: 'n°0004',
     name: 'Lino Chair',
-    image: '/product_images/lino-landing.png',
+    image: '/product_images/landing/lino.jpg',
     category: 'office chairs',
     status: 'available'
   }
@@ -68,30 +69,26 @@ export default function Home() {
   const selectedProduct = selectedProductId ? productDetailsData[selectedProductId] : null
 
   return (
-    <main className="min-h-screen w-full bg-white px-8">
+    <main className="min-h-screen w-full bg-white flex flex-col">
       {/* Header */}
-      <header className="pt-8 pb-4">
+      <header className="pt-8 pb-4  px-8">
         <div className="max-w-[90vw]">
-          <div className="flex flex-row items-start justify-between">
-            <h1 className="font-medium mb-3 tracking-tight">BOKU STUDIO</h1>
-            <nav className="flex font-semibold text-lg">
-              <a href="#" className="hover:underline ml-1">Furniture</a>
-              <span>,</span>
-              <a href="#studio" className="ml-1 hover:underline">Studio</a>
-            </nav>
+          <div className="flex flex-col items-start w-[120]">
+            <h1 className="font-medium text-2xl tracking-tight">Herm <span className="text-blue-600">&</span> Mills</h1>
+            <div className="bg-blue-600 w-full h-4" />
           </div>
         </div>
       </header>
 
       {/* Category Hero Section */}
-      <section className="py-16">
+      <section className="flex-1 pt-8 pb-16 px-8">
         <div className="max-w-[1600px] mx-auto">
-          <div className="flex items-start gap-40 mb-20">
-            <div className="text-[140px] leading-none font-bold">
+          <div className="flex items-end gap-20 mb-20">
+            {/* <div className="text-[140px] leading-none font-bold">
               {filteredProducts.length}
-            </div>
+            </div> */}
             <div className="flex-1 pt-6">
-              <h2 className="text-7xl font-bold mb-2 leading-none">
+              <h2 className="text-7xl font-bold mb-2 leading-none tracking-tight">
                 {selectedCategory === 'ALL' ? 'All Products' : selectedCategory.split(' ')[0]}
               </h2>
               <nav className="flex flex-wrap gap-x-2 text-sm font-semibold uppercase">
@@ -112,26 +109,26 @@ export default function Home() {
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-20">
             {filteredProducts.map(product => (
               <button
                 key={product.id}
                 onClick={() => setSelectedProductId(product.id)}
                 className="group block text-left"
               >
-                <div className="mb-5 flex flex-row gap-4 items-end">
-                  <p className="text-xs uppercase tracking-wider">{product.number}</p>
-                  <h3 className="text-sm uppercase font-medium tracking-wide group-hover:underline">
+                <div className="mb-1 flex flex-row gap-6 items-end">
+                  <p className="text-xs uppercase tracking-wider text-gray-500">{product.number}</p>
+                  <h3 className="text-sm uppercase font-semibold tracking-tight">
                     {product.name}
                   </h3>
                 </div>
-                <div className="aspect-square relative bg-[#c5beb3] overflow-hidden">
+                <div className="relative bg-[#c5beb3] flex-shrink-0 overflow-hidden">
                   <Image
                     src={product.image}
                     alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    width={600}
+                    height={600}
+                    className="object-cover border border-gray-200 group-hover:scale-105 transition-transform duration-500 ease-out w-full h-full"
                   />
                 </div>
               </button>
@@ -141,23 +138,22 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 mt-40">
-        <div className="max-w-[1600px] mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-20">
-            <div>
-              <h3 className="text-lg font-semibold uppercase">scandinavian functionality</h3>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold uppercase">Boston, MA | Copenhagen, DK</h3>
-              <p className="text-lg font-semibold">+1 469 515 6223</p>
-            </div>
-            <div className="flex flex-col space-y-1">
-              <a href="#instagram" className="text-lg font-semibold hover:underline">INSTAGRAM</a>
-              <a href="mailto:info@davesah.bs@gmail.com" className="text-lg font-semibold hover:underline">EMAIL</a>
-            </div>
-            <div className="flex flex-col space-y-1 justify-between items-start text-lg font-semibold">
-              <p className="uppercase tracking-wider">Boku Studio</p>
-              <p>©2025</p>
+      <footer className="mt-20">
+        <div className="max-w-[1600px] border-t border-gray-600">
+          <div className="mx-12 md:mx-32 py-8 md:border-l md:border-r border-gray-600">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-16 px-4">
+              <div className="flex flex-col justify-between items-start text-lg font-semibold">
+                <p className="font-semibold tracking-tight">Herm <span className="text-blue-600">&</span> Mills</p>
+                <p className="tracking-tight text-gray-500">©2025</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold tracking-tight">Boston, MA | Copenhagen, DK</h3>
+                <p className="text-lg font-semibold tracking-tight">+1 469 515 6223</p>
+              </div>
+              <div className="flex flex-col tracking-tight">
+                <a href="https://www.linkedin.com/in/dave-boku/" target="_blank" rel="noopener noreferrer" className="text-lg font-semibold hover:underline">LinkedIn</a>
+                <a href="mailto:info@davesah.bs@gmail.com" className="text-lg font-semibold hover:underline">Email</a>
+              </div>
             </div>
           </div>
         </div>

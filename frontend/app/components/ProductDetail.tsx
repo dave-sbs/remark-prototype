@@ -31,7 +31,7 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
     return (
-        <div className="fixed inset-0 bg-[#ebe7e0] z-50 overflow-y-auto">
+        <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
             <div className="min-h-screen px-8 py-8">
                 <div className="max-w-7xl mx-auto">
                     {/* Close Button */}
@@ -81,7 +81,7 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
                     </div>
 
                     {/* Product Info */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-6xl">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-6xl border-t border-gray-600 py-8">
                         {/* Left Column - Title and Description */}
                         <div>
                             <div className="mb-6">
@@ -110,7 +110,7 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
 
                         {/* Right Column - Specifications and Pricing */}
                         <div>
-                            <div className="border-t border-black pt-6">
+                            <div className="pt-6">
                                 <h3 className="text-sm uppercase font-bold mb-6 tracking-wide">Specifications</h3>
 
                                 <div className="space-y-4 mb-8">
@@ -140,21 +140,9 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
                                 )}
 
                                 {/* Contact Button */}
-                                <button className="w-full border-2 border-black py-4 px-6 text-center font-bold uppercase text-sm tracking-wider hover:bg-black hover:text-white transition-colors mb-6">
+                                <button className="w-full border-2 border-black py-4 px-6 text-center font-bold uppercase text-sm tracking-wide hover:bg-black hover:text-white transition-colors mb-6">
                                     Contact for Purchase
                                 </button>
-
-                                {/* Spec Sheet Link */}
-                                {product.specSheetUrl && (
-                                    <a
-                                        href={product.specSheetUrl}
-                                        className="block text-sm underline hover:no-underline font-medium"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        View Spec Sheet
-                                    </a>
-                                )}
                             </div>
                         </div>
                     </div>

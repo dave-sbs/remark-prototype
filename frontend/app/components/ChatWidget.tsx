@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useChat } from '@ai-sdk/react'
 import ChatMessage from './ChatMessage'
-import { ArrowUp, CrossIcon, Loader2, MessageCircleX, X } from 'lucide-react'
+import { ArrowUp, CrossIcon, Loader2, MessageCircle, MessageCircleX, X } from 'lucide-react'
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false)
@@ -85,11 +85,9 @@ export default function ChatWidget() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-8 right-8 w-16 h-16 bg-black text-white rounded-full shadow-xl hover:bg-gray-800 transition-colors z-50 flex items-center justify-center"
+                    className="fixed bottom-8 right-8 w-16 h-16 bg-black/85 text-white rounded-full shadow-xl hover:bg-gray-800 transition-colors z-50 flex items-center justify-center"
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
+                    <MessageCircle className="w-7 h-7" />
                 </button>
             )}
 
@@ -99,7 +97,7 @@ export default function ChatWidget() {
                     {/* Header */}
                     <div className="p-4 flex justify-between items-center bg-white rounded-t-xl">
                         <div>
-                            <h3 className="font-semibold text-lg">Boku Studio</h3>
+                            <h3 className="font-medium text-lg tracking-tight">Herm & Mills</h3>
                         </div>
                         <button
                             onClick={() => setIsOpen(false)}
@@ -112,8 +110,8 @@ export default function ChatWidget() {
                     {/* Messages container */}
                     <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
                         {messages.length === 0 ? (
-                            <div className="text-center text-gray-500 text-sm mt-8">
-                                <p className="mb-2">👋 Hi! Welcome to Boku Studio!</p>
+                            <div className="text-center text-gray-500 text-sm mt-8 tracking-tight">
+                                <p className="mb-2">👋 Hi! Welcome to Herm & Mills!</p>
                                 <p className="text-xs">Ask me about our chairs, pricing, or anything else.</p>
                             </div>
                         ) : (
