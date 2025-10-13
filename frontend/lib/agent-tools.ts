@@ -391,3 +391,20 @@ export const getChairConfigurationPrice = tool({
     }
 })
 
+export const displayProduct = tool({
+    description: 'Display a product card in the chat when the user is ready to explore or purchase a specific product. Use this when the conversation has narrowed down to a specific product recommendation.',
+    inputSchema: z.object({
+        product_name: z.string().describe('Exact name of the product (e.g., "Aeron Chair", "Cosm Chair", "Eames Aluminum Group Chair", "Lino Chair")'),
+        reason: z.string().describe('Brief reason why this product matches their needs (e.g., "Perfect for long sitting sessions with PostureFit support")')
+    }),
+    execute: async ({ product_name, reason }: { product_name: string; reason: string }) => {
+        // This tool returns data that will be used to render the ProductCard component
+        return {
+            action: 'display_product',
+            product_name,
+            reason,
+            message: `I've shown you the ${product_name}. Click the card above to view full details and customize your configuration.`
+        }
+    }
+})
+

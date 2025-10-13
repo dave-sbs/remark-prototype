@@ -6,7 +6,8 @@ import {
     getAllBasePrices,
     getProductUniqueFeatures,
     getSizeRecommendationForUser,
-    getChairConfigurationPrice
+    getChairConfigurationPrice,
+    displayProduct
 } from '@/lib/agent-tools'
 import { getThreadState, updateThreadState } from '@/lib/agent-state'
 import { SALES_AGENT_PROMPT } from '@/lib/prompts'
@@ -108,13 +109,44 @@ export async function POST(req: Request) {
             get_product_unique_features: getProductUniqueFeatures,
             get_size_recommendation_for_user: getSizeRecommendationForUser,
             get_chair_configuration_price: getChairConfigurationPrice,
+            display_product: displayProduct,
         },
         temperature: 0.7,
         onFinish: async (event) => {
             console.log('[API /chat] 🤖 onFinish: Streaming complete, logging assistant response')
             console.log('[API /chat] Response text length:', event.text?.length || 0)
-            console.log('[API /chat] Tool calls:', event.toolCalls?.length || 0)
-            console.log('[API /chat] Tool results:', event.toolResults?.length || 0)
+            console.log('[API /chat] Steps:', event.steps?.length || 0)
+
+            // Extract tool calls and results from steps (AI SDK 5.0 multi-step pattern)
+            let allToolCalls: any[] = []
+            let allToolResults: any[] = []
+
+            if (event.steps) {
+                event.steps.forEach((step: any) => {
+                    step.content?.forEach((item: any) => {
+                        if (item.type === 'tool-call') {
+                            allToolCalls.push({
+                                toolCallId: item.toolCallId,
+                                toolName: item.toolName,
+                                input: item.input
+                            })
+                        } else if (item.type === 'tool-result') {
+                            allToolResults.push({
+                                toolCallId: item.toolCallId,
+                                toolName: item.toolName,
+                                input: item.input,
+                                output: item.output
+                            })
+                        }
+                    })
+                })
+            }
+
+            console.log('[API /chat] Tool calls detected:', allToolCalls.length)
+            console.log('[API /chat] Tool results detected:', allToolResults.length)
+            if (allToolCalls.length > 0) {
+                console.log('[API /chat] Tool calls:', allToolCalls.map(tc => tc.toolName).join(', '))
+            }
 
             // Log the assistant's response after streaming completes
             const { data: lastMessage } = await supabase
@@ -129,8 +161,8 @@ export async function POST(req: Request) {
 
             // Extract content from response
             const content = event.text || ''
-            const toolCalls = event.toolCalls ? JSON.parse(JSON.stringify(event.toolCalls)) : null
-            const toolResults = event.toolResults ? JSON.parse(JSON.stringify(event.toolResults)) : null
+            const toolCalls = allToolCalls.length > 0 ? allToolCalls : null
+            const toolResults = allToolResults.length > 0 ? allToolResults : null
 
             const assistantMessageId = crypto.randomUUID()
 
