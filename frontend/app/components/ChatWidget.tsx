@@ -16,6 +16,8 @@ export default function ChatWidget() {
     const [input, setInput] = useState('')
     const [fallbackInput, setFallbackInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [initialMessages, setInitialMessages] = useState<any[]>([])
+    const [isLoadingMessages, setIsLoadingMessages] = useState(true)
 
     // Initialize threadId immediately (not in useEffect)
     const [threadId, setThreadId] = useState<string>(() => {
@@ -57,6 +59,34 @@ export default function ChatWidget() {
     const [lastActivity, setLastActivity] = useState(Date.now())
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+    // Load messages from database on mount if resuming thread
+    useEffect(() => {
+        async function loadMessages() {
+            console.log('[ChatWidget] Loading messages for threadId:', threadId)
+            setIsLoadingMessages(true)
+            try {
+                const response = await fetch(`/api/chat/messages?threadId=${threadId}`)
+                if (response.ok) {
+                    const data = await response.json()
+                    console.log('[ChatWidget] ✅ Loaded', data.messages?.length || 0, 'messages from database')
+                    console.log('[ChatWidget] Sample message:', data.messages?.[0])
+                    setInitialMessages(data.messages || [])
+                } else {
+                    console.log('[ChatWidget] No messages found, starting fresh')
+                    setInitialMessages([])
+                }
+            } catch (error) {
+                console.error('[ChatWidget] Error loading messages:', error)
+                setInitialMessages([])
+            } finally {
+                setIsLoadingMessages(false)
+                console.log('[ChatWidget] 🎯 isLoadingMessages set to false')
+            }
+        }
+
+        loadMessages()
+    }, [threadId])
+
     // Check for timeout every minute
     useEffect(() => {
         console.log('[ChatWidget] Setting up timeout checker (checks every 60s)')
@@ -86,16 +116,19 @@ export default function ChatWidget() {
         }
     }, [input])
 
-    const { messages, sendMessage } = useChat({
+    // Initialize useChat - MUST be called on every render (Rules of Hooks)
+    const { messages, sendMessage, setMessages } = useChat({
+        id: threadId,
+        messages: [], // Start with empty array
         transport: new DefaultChatTransport({
             api: '/api/chat',
             prepareSendMessagesRequest: (options: any) => {
                 return {
                     api: options.api,
                     body: {
-                        messages: options.messages,  // Include messages from options
+                        messages: options.messages,
                         ...options.body,
-                        threadId: threadId  // Inject our threadId
+                        threadId: threadId
                     },
                     headers: options.headers,
                     credentials: options.credentials
@@ -104,12 +137,22 @@ export default function ChatWidget() {
         })
     });
 
+    // Update messages when initialMessages are loaded from database
+    useEffect(() => {
+        if (!isLoadingMessages && initialMessages.length > 0) {
+            console.log('[ChatWidget] Syncing', initialMessages.length, 'messages to useChat')
+            setMessages(initialMessages)
+        }
+    }, [isLoadingMessages, initialMessages, setMessages])
+
     const startNewThread = () => {
         console.log('[ChatWidget] 🔄 startNewThread() called!')
         console.log('[ChatWidget] Previous threadId:', threadId)
         const newThreadId = crypto.randomUUID()
         console.log('[ChatWidget] New threadId:', newThreadId)
         setThreadId(newThreadId)
+        setInitialMessages([])  // Clear messages for new thread
+        setMessages([])  // Clear useChat messages immediately
         const now = Date.now()
         setLastActivity(now)
         localStorage.setItem(STORAGE_THREAD_KEY, newThreadId)
@@ -146,18 +189,27 @@ export default function ChatWidget() {
                     </div>
 
                     {/* Messages container */}
-                    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
-                        {messages.length === 0 ? (
-                            <div className="text-center text-gray-500 text-sm mt-8 tracking-tight">
-                                <p className="mb-2">👋 Hi! Welcome to Herm & Mills!</p>
-                                <p className="text-xs">Ask me about our chairs, pricing, or anything else.</p>
+                    {isLoadingMessages ? (
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="text-center text-gray-500">
+                                <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />
+                                <p className="text-xs">Loading conversation...</p>
                             </div>
-                        ) : (
-                            messages.map(msg => (
-                                <ChatMessage key={msg.id} message={msg} />
-                            ))
-                        )}
-                    </div>
+                        </div>
+                    ) : (
+                        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
+                            {messages.length === 0 ? (
+                                <div className="text-center text-gray-500 text-sm mt-8 tracking-tight">
+                                    <p className="mb-2">👋 Hi! Welcome to Herm & Mills!</p>
+                                    <p className="text-xs">Ask me about our chairs, pricing, or anything else.</p>
+                                </div>
+                            ) : (
+                                messages.map(msg => (
+                                    <ChatMessage key={msg.id} message={msg} threadId={threadId} />
+                                ))
+                            )}
+                        </div>
+                    )}
 
                     {/* Input area */}
                     <form

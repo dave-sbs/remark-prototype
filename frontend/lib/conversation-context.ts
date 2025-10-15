@@ -1,0 +1,72 @@
+// Client-side storage for conversation-to-product context
+type ProductRecommendation = {
+    threadId: string
+    productId: string
+    productName: string
+    recommendedVariant?: string
+    recommendedAddons?: string[]
+    customDescription?: string
+    conversationSummary?: string
+    timestamp: number
+}
+
+const STORAGE_KEY = 'remark_product_recommendations'
+const EXPIRY_MS = 30 * 60 * 1000 // 30 minutes
+
+export function saveProductRecommendation(rec: ProductRecommendation) {
+    try {
+        if (typeof window === 'undefined') return
+
+        const existing = getProductRecommendations()
+        existing.push(rec)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(existing))
+
+        console.log('[ConversationContext] Saved recommendation:', {
+            productName: rec.productName,
+            threadId: rec.threadId,
+            customDescription: rec.customDescription
+        })
+    } catch (error) {
+        console.error('[ConversationContext] Failed to save recommendation:', error)
+    }
+}
+
+export function getProductRecommendation(productId: string): ProductRecommendation | null {
+    const recs = getProductRecommendations()
+
+    // Get most recent non-expired recommendation for this product
+    const rec = recs
+        .filter(r => r.productId === productId && Date.now() - r.timestamp < EXPIRY_MS)
+        .sort((a, b) => b.timestamp - a.timestamp)[0]
+
+    console.log('[ConversationContext] Retrieved recommendation for product', productId, rec ? 'found' : 'not found')
+
+    return rec || null
+}
+
+function getProductRecommendations(): ProductRecommendation[] {
+    try {
+        if (typeof window === 'undefined') return []
+
+        const stored = localStorage.getItem(STORAGE_KEY)
+        return stored ? JSON.parse(stored) : []
+    } catch {
+        return []
+    }
+}
+
+export function clearExpiredRecommendations() {
+    try {
+        if (typeof window === 'undefined') return
+
+        const recs = getProductRecommendations()
+        const now = Date.now()
+        const valid = recs.filter(r => now - r.timestamp < EXPIRY_MS)
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(valid))
+
+        console.log(`[ConversationContext] Cleared ${recs.length - valid.length} expired recommendations`)
+    } catch (error) {
+        console.error('[ConversationContext] Failed to clear expired recommendations:', error)
+    }
+}

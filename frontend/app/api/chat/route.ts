@@ -95,6 +95,16 @@ export async function POST(req: Request) {
     // Convert UIMessages to ModelMessages (AI SDK 5)
     const modelMessages = convertToModelMessages(messages)
 
+    // Debug: Log messages being sent to help diagnose tool format issues
+    console.log('[API /chat] Converting', messages.length, 'messages. Messages with tools:')
+    messages.filter(m => m.parts?.some(p => p.type === 'tool-call' || p.type?.startsWith('tool-'))).forEach((msg, idx) => {
+        console.log(`  Message ${idx}:`, JSON.stringify({
+            id: msg.id,
+            role: msg.role,
+            parts: msg.parts?.map(p => ({ type: p.type, toolName: (p as any).toolName, hasArgs: !!(p as any).args }))
+        }, null, 2))
+    })
+
     // Stream with tools (replicates Python's model_with_tools)
     const result = streamText({
         // CRITICAL: Don't change this model!

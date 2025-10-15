@@ -4,65 +4,58 @@ import { extractMessageContent } from '@/lib/message-utils'
 import ProductCard from './ProductCard'
 import { useRouter } from 'next/navigation'
 import { UIMessage } from 'ai'
+import { saveProductRecommendation } from '@/lib/conversation-context'
 
-export default function ChatMessage({ message }: { message: UIMessage }) {
+export default function ChatMessage({ message, threadId }: { message: UIMessage; threadId: string }) {
     const router = useRouter()
     const isUser = message.role === 'user'
 
-    // Check if this message contains a display_product tool call
+    // Check if this message contains a display_product tool call (by toolName, not type)
     const productToolPart = message.parts?.find(
-        part => part.type === 'tool-display_product'
+        part => (part as any).toolName === 'display_product'
     )
 
     // If assistant message with display_product tool, show product card
-    if (!isUser && productToolPart && productToolPart.type === 'tool-display_product') {
-        // Type narrowing - now TypeScript knows this is a tool part
+    if (!isUser && productToolPart) {
+        // Find the tool result for display_product
+        const productToolResult = message.parts?.find(
+            part => part.type === 'tool-result' && (part as any).toolName === 'display_product'
+        )
+
+        const hasResult = !!productToolResult
+
         return (
             <div className="flex flex-col gap-3 max-w-[85%]">
-                {/* Render based on tool state */}
-                {productToolPart.state === 'input-streaming' && (
+                {hasResult ? (
+                    <ProductCard
+                        productName={((productToolResult as any).result as { product_name: string; reason: string }).product_name}
+                        onNavigate={() => {
+                            // Navigate to product page with chat context
+                            const result = (productToolResult as any).result as { product_name: string; reason: string }
+                            const productName = result.product_name
+                            const productId = getProductId(productName)
+                            const reason = result.reason
+
+                            // Extract text content from the entire message for context
+                            const content = extractMessageContent(message)
+
+                            // Save conversation context to localStorage
+                            saveProductRecommendation({
+                                threadId,
+                                productId,
+                                productName,
+                                customDescription: reason,
+                                conversationSummary: content,
+                                timestamp: Date.now()
+                            })
+
+                            router.push(`/product/${productId}?from=chat`)
+                        }}
+                    />
+                ) : (
                     <div className="bg-gray-200 text-black rounded-3xl rounded-bl-sm px-4 py-3 text-sm">
                         <div className="whitespace-pre-wrap break-words">
                             Loading product card...
-                        </div>
-                    </div>
-                )}
-
-                {productToolPart.state === 'input-available' && (
-                    <div className="bg-gray-200 text-black rounded-3xl rounded-bl-sm px-4 py-3 text-sm">
-                        <div className="whitespace-pre-wrap break-words">
-                            Preparing product card...
-                        </div>
-                    </div>
-                )}
-
-                {productToolPart.state === 'output-available' && (
-                    <>
-                        {/* Product Card */}
-                        <ProductCard
-                            productName={(productToolPart.output as any).product_name}
-                            onNavigate={() => {
-                                // Navigate to product page with chat context
-                                const productId = getProductId((productToolPart.output as any).product_name)
-                                router.push(`/product/${productId}?from=chat`)
-                            }}
-                        />
-
-                        {/* Optional text message
-                        {(productToolPart.output as any).message && (
-                            <div className="bg-gray-200 text-black rounded-3xl rounded-bl-sm px-4 py-3 text-sm">
-                                <div className="whitespace-pre-wrap break-words">
-                                    {(productToolPart.output as any).message}
-                                </div>
-                            </div>
-                        )} */}
-                    </>
-                )}
-
-                {productToolPart.state === 'output-error' && (
-                    <div className="bg-red-100 text-red-800 rounded-3xl rounded-bl-sm px-4 py-3 text-sm">
-                        <div className="whitespace-pre-wrap break-words">
-                            Error: {productToolPart.errorText || 'Failed to load product card'}
                         </div>
                     </div>
                 )}

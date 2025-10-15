@@ -26,9 +26,13 @@ export type ProductDetailData = {
 type ProductDetailProps = {
     product: ProductDetailData
     onClose: () => void
+    conversationContext?: {
+        customDescription?: string
+        conversationSummary?: string
+    } | null
 }
 
-export default function ProductDetail({ product, onClose }: ProductDetailProps) {
+export default function ProductDetail({ product, onClose, conversationContext }: ProductDetailProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
     return (
@@ -86,6 +90,19 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
                                 <p className="text-xs uppercase tracking-wider mb-2 text-gray-600">{product.number}</p>
                                 <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
                             </div>
+
+                            {/* Conversation Context Banner */}
+                            {conversationContext?.customDescription && (
+                                <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded">
+                                    <p className="text-sm font-semibold text-blue-900 mb-1 flex items-center gap-2">
+                                        <span>💬</span>
+                                        <span>Based on our conversation</span>
+                                    </p>
+                                    <p className="text-sm text-blue-800">
+                                        {conversationContext.customDescription}
+                                    </p>
+                                </div>
+                            )}
 
                             <div className="border-t border-black pt-6">
                                 <p className="text-lg leading-relaxed mb-6">{product.description}</p>
