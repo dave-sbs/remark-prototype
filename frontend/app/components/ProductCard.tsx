@@ -49,7 +49,7 @@ export default function ProductCard({ productName, onNavigate }: ProductCardProp
             </div>
 
             {/* Badge */}
-            <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+            <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-sm">
                 Recommended
             </div>
         </button>

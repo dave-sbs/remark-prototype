@@ -4,11 +4,12 @@ import { useState, useEffect, useRef } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, PrepareSendMessagesRequest } from 'ai';
 import ChatMessage from './ChatMessage'
-import { ArrowUp, CrossIcon, Loader2, MessageCircle, MessageCircleX, X } from 'lucide-react'
+import ExpertPopover from './ExpertPopover'
+import { ArrowUp, CrossIcon, Loader2, MessageCircle, X } from 'lucide-react'
 
 export default function ChatWidget() {
     // Thread management constants
-    const THREAD_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
+    const THREAD_TIMEOUT_MS = 1 * 60 * 1000 // 5 minutes
     const STORAGE_THREAD_KEY = 'remark_chat_thread'
     const STORAGE_ACTIVITY_KEY = 'remark_last_activity'
 
@@ -57,6 +58,7 @@ export default function ChatWidget() {
     })
 
     const [lastActivity, setLastActivity] = useState(Date.now())
+    const [showExpertPopover, setShowExpertPopover] = useState(false)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     // Load messages from database on mount if resuming thread
@@ -107,6 +109,15 @@ export default function ChatWidget() {
             clearInterval(interval)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // Show expert popover after 2 second delay
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowExpertPopover(true)
+        }, 2000) // 2 seconds
+
+        return () => clearTimeout(timer)
     }, [])
 
     // Reset textarea height when input is empty
@@ -164,17 +175,24 @@ export default function ChatWidget() {
         <>
             {/* Floating button (closed state) */}
             {!isOpen && (
-                <button
-                    onClick={() => setIsOpen(true)}
-                    className="fixed bottom-8 right-8 w-16 h-16 bg-black/85 text-white rounded-full shadow-xl hover:bg-gray-800 transition-colors z-50 flex items-center justify-center"
-                >
-                    <MessageCircle className="w-7 h-7" />
-                </button>
+                <div className="fixed bottom-8 right-8 z-50 flex items-end gap-4">
+                    {showExpertPopover &&
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                            <ExpertPopover />
+                        </div>
+                    }
+                    <button
+                        onClick={() => setIsOpen(true)}
+                        className="w-16 h-16 bg-black text-white rounded-full shadow-xl hover:bg-gray-800 transition-colors flex items-center justify-center cursor-pointer animate-[ping_5s_opacity-100_ease-in-out_infinite]"
+                    >
+                        <MessageCircle className="w-7 h-7" />
+                    </button>
+                </div>
             )}
 
             {/* Chat panel (open state) */}
             {isOpen && (
-                <div className="fixed bottom-8 right-8 w-full md:w-[420px] max-w-[420px] h-[600px] bg-white border border-gray-200 rounded-xl shadow-2xl flex flex-col z-50">
+                <div className="fixed bottom-8 right-8 w-full md:w-[420px] max-w-[360px] h-[600px] bg-white rounded-xl shadow-2xl flex flex-col z-50">
                     {/* Header */}
                     <div className="p-4 flex justify-between items-center bg-black rounded-t-xl border-b border-gray-200">
                         <div>
@@ -182,7 +200,7 @@ export default function ChatWidget() {
                         </div>
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors text-white hover:text-black"
+                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors text-white hover:text-black cursor-pointer"
                         >
                             <X />
                         </button>

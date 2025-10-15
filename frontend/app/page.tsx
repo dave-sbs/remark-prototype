@@ -5,7 +5,6 @@ import Image from 'next/image'
 import ProductDetail from './components/ProductDetail'
 import { productDetailsData } from './data/productDetails'
 import ChatWidget from './components/ChatWidget'
-import { Dot } from 'lucide-react'
 
 type ProductItem = {
   id: string

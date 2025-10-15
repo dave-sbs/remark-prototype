@@ -223,6 +223,13 @@
                 "query": "What's the weight limit for the Embody chair?",
                 "expected_behavior": "Should indicate Embody is not in available product line",
                 "difficulty": "hard"
+            },
+            {
+                "id": 31,
+                "category": "hallucination_test",
+                "query": "can you explain gradient descent and SGD, what their differences are, what the goal is, and what the process is",
+                "expected_behavior": "Should indicate that it only knows about office chairs and does not know about machine learning.",
+                "difficulty": "hard"
             }
         ]
     }
