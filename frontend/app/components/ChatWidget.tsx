@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+
 import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport, PrepareSendMessagesRequest } from 'ai';
+import { DefaultChatTransport } from 'ai';
+
 import ChatMessage from './ChatMessage'
 import ExpertPopover from './ExpertPopover'
 import ConnectExpertCard from './onboarding/ConnectExpertCard'
@@ -10,24 +12,41 @@ import QueryInputCard from './onboarding/QueryInputCard'
 import NameInputCard from './onboarding/NameInputCard'
 import EmailInputCard from './onboarding/EmailInputCard'
 import ExpertMatchingCard from './onboarding/ExpertMatchingCard'
-import { ArrowUp, CrossIcon, Loader2, MessageCircle, X } from 'lucide-react'
+
+import { ArrowUp, Loader2, MessageCircle, X } from 'lucide-react'
 
 type OnboardingStep = 'connect_prompt' | 'query_input' | 'name_input' | 'email_input' | 'expert_matching' | 'complete'
 
 export default function ChatWidget() {
     // Thread management constants
-    const THREAD_TIMEOUT_MS = 1 * 60 * 1000 // 5 minutes
+    const THREAD_TIMEOUT_MS = 20 * 60 * 1000 // 20 minutes
     const STORAGE_THREAD_KEY = 'remark_chat_thread'
     const STORAGE_ACTIVITY_KEY = 'remark_last_activity'
 
+    // Activity state
+    const [lastActivity, setLastActivity] = useState(Date.now())
+    const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingMessages, setIsLoadingMessages] = useState(true)
+
+    // Chat state
     const [isOpen, setIsOpen] = useState(false)
     const [input, setInput] = useState('')
     const [fallbackInput, setFallbackInput] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
     const [initialMessages, setInitialMessages] = useState<any[]>([])
-    const [isLoadingMessages, setIsLoadingMessages] = useState(true)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-    // Initialize threadId immediately (not in useEffect)
+    // Expert popover state
+    const [showExpertPopover, setShowExpertPopover] = useState(false)
+
+    // Onboarding state
+    const [showOnboarding, setShowOnboarding] = useState(false)
+    const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>('connect_prompt')
+    const [userQuery, setUserQuery] = useState('')
+    const [userName, setUserName] = useState('')
+    const [userEmail, setUserEmail] = useState('')
+    const [completedSteps, setCompletedSteps] = useState<OnboardingStep[]>([]) // Track completed steps for progressive rendering
+
+    // Initialize threadId immediately
     const [threadId, setThreadId] = useState<string>(() => {
         console.log('[ChatWidget] Initializing threadId...')
         if (typeof window !== 'undefined') {
@@ -64,17 +83,6 @@ export default function ChatWidget() {
         return newId
     })
 
-    const [lastActivity, setLastActivity] = useState(Date.now())
-    const [showExpertPopover, setShowExpertPopover] = useState(false)
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-    // Onboarding state
-    const [showOnboarding, setShowOnboarding] = useState(false)
-    const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>('connect_prompt')
-    const [userQuery, setUserQuery] = useState('')
-    const [userName, setUserName] = useState('')
-    const [userEmail, setUserEmail] = useState('')
-
     // Load messages from database on mount if resuming thread
     useEffect(() => {
         async function loadMessages() {
@@ -85,7 +93,6 @@ export default function ChatWidget() {
                 if (response.ok) {
                     const data = await response.json()
                     console.log('[ChatWidget] ✅ Loaded', data.messages?.length || 0, 'messages from database')
-                    console.log('[ChatWidget] Sample message:', data.messages?.[0])
                     setInitialMessages(data.messages || [])
                 } else {
                     console.log('[ChatWidget] No messages found, starting fresh')
@@ -129,7 +136,7 @@ export default function ChatWidget() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowExpertPopover(true)
-        }, 2000) // 2 seconds
+        }, 100) // 100ms
 
         return () => clearTimeout(timer)
     }, [])
@@ -193,6 +200,15 @@ export default function ChatWidget() {
         setThreadId(newThreadId)
         setInitialMessages([])  // Clear messages for new thread
         setMessages([])  // Clear useChat messages immediately
+
+        // Reset onboarding state
+        setShowOnboarding(false)
+        setOnboardingStep('connect_prompt')
+        setUserQuery('')
+        setUserName('')
+        setUserEmail('')
+        setCompletedSteps([])
+
         const now = Date.now()
         setLastActivity(now)
         localStorage.setItem(STORAGE_THREAD_KEY, newThreadId)
@@ -203,36 +219,42 @@ export default function ChatWidget() {
     // Onboarding handlers
     const handleConnectExpert = () => {
         console.log('[ChatWidget] User clicked Connect with Expert')
+        setCompletedSteps(prev => [...prev, 'connect_prompt'])
         setOnboardingStep('query_input')
     }
 
     const handleQuerySubmit = (query: string) => {
         console.log('[ChatWidget] User submitted query:', query)
         setUserQuery(query)
+        setCompletedSteps(prev => [...prev, 'query_input'])
         setOnboardingStep('name_input')
     }
 
     const handleNameSubmit = (name: string) => {
         console.log('[ChatWidget] User submitted name:', name)
         setUserName(name)
+        setCompletedSteps(prev => [...prev, 'name_input'])
         setOnboardingStep('email_input')
     }
 
     const handleNameSkip = () => {
         console.log('[ChatWidget] User skipped name')
         setUserName('')
+        setCompletedSteps(prev => [...prev, 'name_input'])
         setOnboardingStep('email_input')
     }
 
     const handleEmailSubmit = async (email: string) => {
         console.log('[ChatWidget] User submitted email:', email)
         setUserEmail(email)
+        setCompletedSteps(prev => [...prev, 'email_input'])
         await finalizeOnboarding(email)
     }
 
     const handleEmailSkip = async () => {
         console.log('[ChatWidget] User skipped email')
         setUserEmail('')
+        setCompletedSteps(prev => [...prev, 'email_input'])
         await finalizeOnboarding('')
     }
 
@@ -256,7 +278,7 @@ export default function ChatWidget() {
         // Show expert matching step
         setOnboardingStep('expert_matching')
 
-        // After 2 seconds, complete onboarding and trigger AI response
+        // After 100ms, complete onboarding and trigger AI response
         setTimeout(async () => {
             // Complete onboarding
             setOnboardingStep('complete')
@@ -264,7 +286,7 @@ export default function ChatWidget() {
 
             // Send the query to the AI
             await sendMessage({ text: userQuery })
-        }, 2000)
+        }, 100)
     }
 
     return (
@@ -312,19 +334,35 @@ export default function ChatWidget() {
                         </div>
                     ) : showOnboarding ? (
                         <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
-                            {/* Show onboarding components based on step */}
+                            {/* Progressive onboarding - show all completed steps + current step */}
+
+                            {/* Step 1: Connect Expert Card - only show when it's the current step */}
                             {onboardingStep === 'connect_prompt' && (
                                 <ConnectExpertCard onConnect={handleConnectExpert} />
                             )}
+
+                            {/* Step 2: Query Input */}
                             {onboardingStep === 'query_input' && (
                                 <QueryInputCard onSubmit={handleQuerySubmit} />
                             )}
+                            {/* Show query as a user message after submission */}
+                            {completedSteps.includes('query_input') && userQuery && (
+                                <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-900 ml-auto max-w-[80%]">
+                                    {userQuery}
+                                </div>
+                            )}
+
+                            {/* Step 3: Name Input */}
                             {onboardingStep === 'name_input' && (
                                 <NameInputCard onSubmit={handleNameSubmit} onSkip={handleNameSkip} />
                             )}
+
+                            {/* Step 4: Email Input */}
                             {onboardingStep === 'email_input' && (
                                 <EmailInputCard userName={userName} onSubmit={handleEmailSubmit} onSkip={handleEmailSkip} />
                             )}
+
+                            {/* Step 5: Expert Matching */}
                             {onboardingStep === 'expert_matching' && (
                                 <>
                                     <div className="bg-gray-50 rounded-lg p-3 text-center text-sm text-gray-700">
@@ -342,9 +380,20 @@ export default function ChatWidget() {
                                     <p className="text-xs">Ask me about our chairs, pricing, or anything else.</p>
                                 </div>
                             ) : (
-                                messages.map(msg => (
-                                    <ChatMessage key={msg.id} message={msg} threadId={threadId} />
-                                ))
+                                <>
+                                    {/* Render messages with expert card after first user message */}
+                                    {messages.map((msg, index) => (
+                                        <div key={msg.id}>
+                                            <ChatMessage message={msg} threadId={threadId} />
+                                            {/* Show expert matching card after the first user message */}
+                                            {index === 0 && msg.role === 'user' && userQuery && (
+                                                <div className="mt-4">
+                                                    <ExpertMatchingCard userName={userName} />
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </>
                             )}
                         </div>
                     )}

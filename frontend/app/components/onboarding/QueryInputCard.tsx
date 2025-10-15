@@ -11,8 +11,8 @@ export default function QueryInputCard({ onSubmit }: QueryInputCardProps) {
     const [error, setError] = useState('')
 
     const handleSubmit = () => {
-        if (query.trim().length < 10) {
-            setError('Please provide at least 10 characters to help us match you with the right expert')
+        if (query.trim().length < 2) {
+            setError('Please provide at least 3 characters to help us match you with the right expert')
             return
         }
 
@@ -44,7 +44,7 @@ export default function QueryInputCard({ onSubmit }: QueryInputCardProps) {
             <button
                 onClick={handleSubmit}
                 disabled={!query.trim()}
-                className="w-full bg-black text-white rounded-lg py-3 px-4 hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                className="w-full bg-black text-white rounded-lg py-3 px-4 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium cursor-pointer"
             >
                 Submit
             </button>

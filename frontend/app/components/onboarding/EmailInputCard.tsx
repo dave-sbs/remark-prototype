@@ -59,7 +59,7 @@ export default function EmailInputCard({ userName, onSubmit, onSkip }: EmailInpu
 
             <button
                 onClick={handleSubmit}
-                className="w-full bg-black text-white rounded-lg py-3 px-4 hover:bg-gray-800 transition-colors text-sm font-medium mb-3"
+                className="w-full bg-black text-white rounded-lg py-3 px-4 transition-colors text-sm font-medium mb-3 cursor-pointer"
             >
                 Let's get chatting
             </button>

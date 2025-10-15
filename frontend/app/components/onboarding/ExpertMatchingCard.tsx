@@ -11,11 +11,11 @@ export default function ExpertMatchingCard({ userName }: ExpertMatchingCardProps
     const name = userName || 'there'
 
     return (
-        <div className="bg-gray-50 rounded-lg p-4 max-w-sm border border-gray-200">
+        <div className="pb-4 max-w-sm border-b border-gray-200">
             {/* Header */}
-            <p className="text-sm text-gray-700 font-medium mb-4 text-center">
-                Matched with Dave's assistant
-            </p>
+            <span className='border-b border-gray-200'></span><p className="text-sm text-gray-700 font-medium mb-4 text-center">
+                Matched with Dave B.
+            </p><span className='border-b border-gray-200'></span>
 
             {/* Expert Profile */}
             <div className="flex flex-col items-center mb-4">
