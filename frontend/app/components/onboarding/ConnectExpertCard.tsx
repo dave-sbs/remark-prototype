@@ -53,7 +53,7 @@ export default function ConnectExpertCard({ onConnect }: ConnectExpertCardProps)
             {/* Connect button */}
             <button
                 onClick={onConnect}
-                className="w-full bg-black text-white rounded-lg py-3 px-4 flex items-center justify-center gap-2 transition-colors text-sm font-medium cursor-pointer"
+                className="w-full bg-black text-white rounded-lg py-3 px-4 flex items-center justify-center gap-2 transition-colors text-sm font-medium cursor-pointer hover:bg-gray-800"
             >
                 <MessageCircle className="w-4 h-4" />
                 Connect with an expert
