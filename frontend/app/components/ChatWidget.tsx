@@ -5,7 +5,14 @@ import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, PrepareSendMessagesRequest } from 'ai';
 import ChatMessage from './ChatMessage'
 import ExpertPopover from './ExpertPopover'
+import ConnectExpertCard from './onboarding/ConnectExpertCard'
+import QueryInputCard from './onboarding/QueryInputCard'
+import NameInputCard from './onboarding/NameInputCard'
+import EmailInputCard from './onboarding/EmailInputCard'
+import ExpertMatchingCard from './onboarding/ExpertMatchingCard'
 import { ArrowUp, CrossIcon, Loader2, MessageCircle, X } from 'lucide-react'
+
+type OnboardingStep = 'connect_prompt' | 'query_input' | 'name_input' | 'email_input' | 'expert_matching' | 'complete'
 
 export default function ChatWidget() {
     // Thread management constants
@@ -60,6 +67,13 @@ export default function ChatWidget() {
     const [lastActivity, setLastActivity] = useState(Date.now())
     const [showExpertPopover, setShowExpertPopover] = useState(false)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+    // Onboarding state
+    const [showOnboarding, setShowOnboarding] = useState(false)
+    const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>('connect_prompt')
+    const [userQuery, setUserQuery] = useState('')
+    const [userName, setUserName] = useState('')
+    const [userEmail, setUserEmail] = useState('')
 
     // Load messages from database on mount if resuming thread
     useEffect(() => {
@@ -156,6 +170,21 @@ export default function ChatWidget() {
         }
     }, [isLoadingMessages, initialMessages, setMessages])
 
+    // Detect when to show onboarding
+    useEffect(() => {
+        if (!isLoadingMessages) {
+            if (initialMessages.length === 0 && messages.length === 0) {
+                console.log('[ChatWidget] No messages found - starting onboarding')
+                setShowOnboarding(true)
+                setOnboardingStep('connect_prompt')
+            } else {
+                console.log('[ChatWidget] Messages exist - skipping onboarding')
+                setShowOnboarding(false)
+                setOnboardingStep('complete')
+            }
+        }
+    }, [isLoadingMessages, initialMessages, messages])
+
     const startNewThread = () => {
         console.log('[ChatWidget] 🔄 startNewThread() called!')
         console.log('[ChatWidget] Previous threadId:', threadId)
@@ -169,6 +198,73 @@ export default function ChatWidget() {
         localStorage.setItem(STORAGE_THREAD_KEY, newThreadId)
         localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
         console.log('[ChatWidget] Thread reset complete. localStorage updated.')
+    }
+
+    // Onboarding handlers
+    const handleConnectExpert = () => {
+        console.log('[ChatWidget] User clicked Connect with Expert')
+        setOnboardingStep('query_input')
+    }
+
+    const handleQuerySubmit = (query: string) => {
+        console.log('[ChatWidget] User submitted query:', query)
+        setUserQuery(query)
+        setOnboardingStep('name_input')
+    }
+
+    const handleNameSubmit = (name: string) => {
+        console.log('[ChatWidget] User submitted name:', name)
+        setUserName(name)
+        setOnboardingStep('email_input')
+    }
+
+    const handleNameSkip = () => {
+        console.log('[ChatWidget] User skipped name')
+        setUserName('')
+        setOnboardingStep('email_input')
+    }
+
+    const handleEmailSubmit = async (email: string) => {
+        console.log('[ChatWidget] User submitted email:', email)
+        setUserEmail(email)
+        await finalizeOnboarding(email)
+    }
+
+    const handleEmailSkip = async () => {
+        console.log('[ChatWidget] User skipped email')
+        setUserEmail('')
+        await finalizeOnboarding('')
+    }
+
+    const finalizeOnboarding = async (email: string) => {
+        // Save onboarding data to database
+        try {
+            await fetch('/api/chat/onboarding', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    threadId,
+                    name: userName,
+                    email: email,
+                    query: userQuery
+                })
+            })
+        } catch (error) {
+            console.error('[ChatWidget] Failed to save onboarding data:', error)
+        }
+
+        // Show expert matching step
+        setOnboardingStep('expert_matching')
+
+        // After 2 seconds, complete onboarding and trigger AI response
+        setTimeout(async () => {
+            // Complete onboarding
+            setOnboardingStep('complete')
+            setShowOnboarding(false)
+
+            // Send the query to the AI
+            await sendMessage({ text: userQuery })
+        }, 2000)
     }
 
     return (
@@ -214,6 +310,30 @@ export default function ChatWidget() {
                                 <p className="text-xs">Loading conversation...</p>
                             </div>
                         </div>
+                    ) : showOnboarding ? (
+                        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
+                            {/* Show onboarding components based on step */}
+                            {onboardingStep === 'connect_prompt' && (
+                                <ConnectExpertCard onConnect={handleConnectExpert} />
+                            )}
+                            {onboardingStep === 'query_input' && (
+                                <QueryInputCard onSubmit={handleQuerySubmit} />
+                            )}
+                            {onboardingStep === 'name_input' && (
+                                <NameInputCard onSubmit={handleNameSubmit} onSkip={handleNameSkip} />
+                            )}
+                            {onboardingStep === 'email_input' && (
+                                <EmailInputCard userName={userName} onSubmit={handleEmailSubmit} onSkip={handleEmailSkip} />
+                            )}
+                            {onboardingStep === 'expert_matching' && (
+                                <>
+                                    <div className="bg-gray-50 rounded-lg p-3 text-center text-sm text-gray-700">
+                                        Hold on tight {userName || 'there'}, connecting you with an expert...
+                                    </div>
+                                    <ExpertMatchingCard userName={userName} />
+                                </>
+                            )}
+                        </div>
                     ) : (
                         <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 bg-white">
                             {messages.length === 0 ? (
@@ -229,66 +349,68 @@ export default function ChatWidget() {
                         </div>
                     )}
 
-                    {/* Input area */}
-                    <form
-                        onSubmit={async (e) => {
-                            e.preventDefault()
-                            if (!input.trim()) return
+                    {/* Input area - hidden during onboarding */}
+                    {!showOnboarding && (
+                        <form
+                            onSubmit={async (e) => {
+                                e.preventDefault()
+                                if (!input.trim()) return
 
-                            try {
-                                setIsLoading(true)
-                                setFallbackInput(input)
-                                setInput('')
+                                try {
+                                    setIsLoading(true)
+                                    setFallbackInput(input)
+                                    setInput('')
 
-                                // Send message (threadId is included in useChat body config)
-                                await sendMessage({ text: input })
+                                    // Send message (threadId is included in useChat body config)
+                                    await sendMessage({ text: input })
 
-                                // Update activity timestamp
-                                const now = Date.now()
-                                setLastActivity(now)
-                                localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
-                            } catch (error) {
-                                setInput(fallbackInput)
-                                console.error('[ChatWidget] ❌ Failed to send message:', error)
-                            } finally {
-                                setIsLoading(false)
-                            }
-                        }}
-                        className="p-4 bg-white rounded-b-xl"
-                    >
-                        <div className="relative">
-                            <textarea
-                                ref={textareaRef}
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault()
-                                        e.currentTarget.form?.requestSubmit()
-                                    }
-                                }}
-                                placeholder="Ask about our chairs..."
-                                rows={1}
-                                className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-2xl focus:shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent transition-all resize-none overflow-hidden overflow-y-auto min-h-[48px] max-h-[120px]"
-                                style={{
-                                    height: 'auto',
-                                    overflowY: input.split('\n').length > 3 ? 'auto' : 'hidden'
-                                }}
-                                onInput={(e) => {
-                                    const target = e.currentTarget
-                                    target.style.height = 'auto'
-                                    target.style.height = Math.min(target.scrollHeight, 120) + 'px'
-                                }}
-                            />
-                            <button
-                                type="submit"
-                                disabled={!input.trim()}
-                                className="absolute right-2 bottom-2 mb-2 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
-                            >
-                                {isLoading ? <Loader2 className="animate-spin" /> : <ArrowUp />}
-                            </button>
-                        </div>
-                    </form>
+                                    // Update activity timestamp
+                                    const now = Date.now()
+                                    setLastActivity(now)
+                                    localStorage.setItem(STORAGE_ACTIVITY_KEY, now.toString())
+                                } catch (error) {
+                                    setInput(fallbackInput)
+                                    console.error('[ChatWidget] ❌ Failed to send message:', error)
+                                } finally {
+                                    setIsLoading(false)
+                                }
+                            }}
+                            className="p-4 bg-white rounded-b-xl"
+                        >
+                            <div className="relative">
+                                <textarea
+                                    ref={textareaRef}
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault()
+                                            e.currentTarget.form?.requestSubmit()
+                                        }
+                                    }}
+                                    placeholder="Ask about our chairs..."
+                                    rows={1}
+                                    className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-2xl focus:shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent transition-all resize-none overflow-hidden overflow-y-auto min-h-[48px] max-h-[120px]"
+                                    style={{
+                                        height: 'auto',
+                                        overflowY: input.split('\n').length > 3 ? 'auto' : 'hidden'
+                                    }}
+                                    onInput={(e) => {
+                                        const target = e.currentTarget
+                                        target.style.height = 'auto'
+                                        target.style.height = Math.min(target.scrollHeight, 120) + 'px'
+                                    }}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={!input.trim()}
+                                    className="absolute right-2 bottom-2 mb-2 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
+                                >
+                                    {isLoading ? <Loader2 className="animate-spin" /> : <ArrowUp />}
+                                </button>
+                            </div>
+                        </form>
+                    )}
                 </div>
             )}
         </>
