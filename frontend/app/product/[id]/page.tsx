@@ -30,7 +30,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                     customDescription: recommendation.customDescription,
                     conversationSummary: recommendation.conversationSummary
                 })
-                console.log('[ProductPage] Loaded conversation context:', recommendation)
             }
         }
     }, [fromChat, id])

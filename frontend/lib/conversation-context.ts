@@ -21,11 +21,6 @@ export function saveProductRecommendation(rec: ProductRecommendation) {
         existing.push(rec)
         localStorage.setItem(STORAGE_KEY, JSON.stringify(existing))
 
-        console.log('[ConversationContext] Saved recommendation:', {
-            productName: rec.productName,
-            threadId: rec.threadId,
-            customDescription: rec.customDescription
-        })
     } catch (error) {
         console.error('[ConversationContext] Failed to save recommendation:', error)
     }
@@ -38,8 +33,6 @@ export function getProductRecommendation(productId: string): ProductRecommendati
     const rec = recs
         .filter(r => r.productId === productId && Date.now() - r.timestamp < EXPIRY_MS)
         .sort((a, b) => b.timestamp - a.timestamp)[0]
-
-    console.log('[ConversationContext] Retrieved recommendation for product', productId, rec ? 'found' : 'not found')
 
     return rec || null
 }
@@ -64,8 +57,6 @@ export function clearExpiredRecommendations() {
         const valid = recs.filter(r => now - r.timestamp < EXPIRY_MS)
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(valid))
-
-        console.log(`[ConversationContext] Cleared ${recs.length - valid.length} expired recommendations`)
     } catch (error) {
         console.error('[ConversationContext] Failed to clear expired recommendations:', error)
     }

@@ -16,14 +16,13 @@ export async function POST(req: NextRequest) {
         )
 
         // Save onboarding data to database
-        // This assumes a chat_onboarding table exists with columns: thread_id, name, email, query, created_at
         const { data, error } = await supabase
             .from('chat_onboarding')
             .upsert({
                 thread_id: threadId,
-                name: name || null,
-                email: email || null,
-                query: query || null,
+                user_name: name || null,
+                user_email: email || null,
+                user_query: query || null,
                 created_at: new Date().toISOString()
             }, {
                 onConflict: 'thread_id'

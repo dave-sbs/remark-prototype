@@ -27,18 +27,18 @@ export async function GET(req: NextRequest) {
         console.log(`[API /chat/messages] Fetched ${messages?.length || 0} messages for thread ${threadId}`)
 
         // Debug: Log a sample message to see structure
-        if (messages && messages.length > 0) {
-            const sampleWithTools = messages.find(m => m.tool_calls || m.tool_results)
-            if (sampleWithTools) {
-                console.log('[API /chat/messages] Sample message with tools:', JSON.stringify({
-                    role: sampleWithTools.role,
-                    tool_calls: sampleWithTools.tool_calls,
-                    tool_results: sampleWithTools.tool_results
-                }, null, 2))
-            }
-        }
+        // if (messages && messages.length > 0) {
+        //     const sampleWithTools = messages.find(m => m.tool_calls || m.tool_results)
+        //     if (sampleWithTools) {
+        //         console.log('[API /chat/messages] Sample message with tools:', JSON.stringify({
+        //             role: sampleWithTools.role,
+        //             tool_calls: sampleWithTools.tool_calls,
+        //             tool_results: sampleWithTools.tool_results
+        //         }, null, 2))
+        //     }
+        // }
 
-        // Transform to UIMessage format
+        // Transform to UIMessage format compatible with AI SDK 5.0
         const uiMessages = messages?.map(msg => {
             const parts = []
 
@@ -50,26 +50,23 @@ export async function GET(req: NextRequest) {
                 })
             }
 
-            // Add tool calls if present - use standard format for ALL tools
+            // Add tool calls and results as typed tool parts (AI SDK 5.0 format)
+            // Tool results are embedded in assistant messages as typed parts like 'tool-displayProduct'
             if (msg.tool_calls && Array.isArray(msg.tool_calls)) {
                 msg.tool_calls.forEach((toolCall: { toolCallId: string; toolName: string; input: unknown }) => {
+                    // Find matching tool result if it exists
+                    const toolResult = msg.tool_results?.find(
+                        (r: { toolCallId: string; toolName: string; output: unknown }) => r.toolCallId === toolCall.toolCallId
+                    )
+
+                    // Create typed tool part (e.g., 'tool-displayProduct')
                     parts.push({
-                        type: 'tool-call',
+                        type: `tool-${toolCall.toolName}`,
                         toolCallId: toolCall.toolCallId,
                         toolName: toolCall.toolName,
-                        args: toolCall.input
-                    })
-                })
-            }
-
-            // Add tool results if present
-            if (msg.tool_results && Array.isArray(msg.tool_results)) {
-                msg.tool_results.forEach((toolResult: { toolCallId: string; toolName: string; output: unknown }) => {
-                    parts.push({
-                        type: 'tool-result',
-                        toolCallId: toolResult.toolCallId,
-                        toolName: toolResult.toolName,
-                        result: toolResult.output
+                        state: toolResult ? 'output-available' : 'input-available',
+                        input: toolCall.input,
+                        ...(toolResult && { output: toolResult.output })
                     })
                 })
             }

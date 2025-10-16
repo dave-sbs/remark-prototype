@@ -37,6 +37,7 @@ export function useThreadMessages(threadId: string): UseThreadMessagesReturn {
 
     try {
       const data = await loadMessages(threadId)
+      console.log('messages so far', data.messages)
       setMessages(data.messages || [])
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to load messages')

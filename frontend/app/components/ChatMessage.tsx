@@ -10,31 +10,29 @@ export default function ChatMessage({ message, threadId }: { message: UIMessage;
     const router = useRouter()
     const isUser = message.role === 'user'
 
-    // Check if this message contains a display_product tool call (by toolName, not type)
+    // Check if this message contains a display_product tool (AI SDK 5.0 typed tool parts)
     const productToolPart = message.parts?.find(
-        part => (part as any).toolName === 'display_product'
+        part => part.type === 'tool-display_product'
     )
 
     // If assistant message with display_product tool, show product card
     if (!isUser && productToolPart) {
-        // Find the tool result for display_product
-        const productToolResult = message.parts?.find(
-            part => part.type === 'tool-result' && (part as any).toolName === 'display_product'
-        )
+        const typedToolPart = productToolPart as any
 
-        const hasResult = !!productToolResult
+        // Check if the tool has completed execution (state: 'output-available')
+        const hasResult = typedToolPart.state === 'output-available' && typedToolPart.output
 
         return (
             <div className="flex flex-col gap-3 max-w-[85%]">
                 {hasResult ? (
                     <ProductCard
-                        productName={((productToolResult as any).result as { product_name: string; reason: string }).product_name}
+                        productName={(typedToolPart.output as { product_name: string; reason: string }).product_name}
                         onNavigate={() => {
                             // Navigate to product page with chat context
-                            const result = (productToolResult as any).result as { product_name: string; reason: string }
-                            const productName = result.product_name
+                            const output = typedToolPart.output as { product_name: string; reason: string }
+                            const productName = output.product_name
                             const productId = getProductId(productName)
-                            const reason = result.reason
+                            const reason = output.reason
 
                             // Extract text content from the entire message for context
                             const content = extractMessageContent(message)
