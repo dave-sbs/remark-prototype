@@ -100,7 +100,7 @@ export const productDetailsData: Record<string, ProductDetailData> = {
             { label: 'Height', value: '33" - 37"' },
             { label: 'Seat Height', value: '17" - 21"' },
             { label: 'Weight Capacity', value: '300 lbs' },
-            { label: 'Warranty', value: '5 years' },
+            { label: 'Warranty', value: '12 years' },
         ],
         pricing: [
             { label: 'Fabric Sling', price: 2195 },
@@ -136,7 +136,7 @@ export const productDetailsData: Record<string, ProductDetailData> = {
             { label: 'Height', value: '31"' },
             { label: 'Seat Height', value: '18"' },
             { label: 'Weight Capacity', value: '250 lbs' },
-            { label: 'Warranty', value: '5 years' },
+            { label: 'Warranty', value: '12 years' },
         ],
         pricing: [
             { label: '4-Leg Base', price: 595 },
