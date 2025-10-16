@@ -84,7 +84,6 @@ export default function ChatWidget() {
     // Sync initialMessages to useChat when loaded
     useEffect(() => {
         if (!isLoadingMessages && initialMessages.length > 0 && messages.length === 0) {
-            console.log(initialMessages)
             setMessages(initialMessages)
         }
     }, [isLoadingMessages, initialMessages, messages.length, setMessages])
