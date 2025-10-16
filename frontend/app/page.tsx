@@ -71,7 +71,7 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full bg-white flex flex-col">
       {/* Header */}
-      <header className="pt-8 pb-4  px-8">
+      <header className="pt-8 pb-4 px-8">
         <div className="max-w-[90vw]">
           <div className="flex flex-col items-start w-[120]">
             <h1 className="font-medium text-2xl tracking-tight">Herm <span className="text-blue-600">&</span> Mills</h1>

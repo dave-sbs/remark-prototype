@@ -11,7 +11,7 @@ export default function ExpertPopover() {
 
     return (
         <>
-            <div className="bg-white rounded-lg shadow-2xl p-4 max-w-xs relative">
+            <div className="bg-white rounded-lg shadow-2xl p-4 max-w-2xs md:max-w-xs relative">
                 <button
                     onClick={() => setIsVisible(false)}
                     className="absolute -top-2 -left-2 w-6 h-6 flex items-center justify-center bg-white hover:bg-gray-50 rounded-lg transition-colors text-gray-600 hover:text-gray-800 border border-gray-200"

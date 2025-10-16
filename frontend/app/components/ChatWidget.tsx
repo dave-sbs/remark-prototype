@@ -114,7 +114,7 @@ export default function ChatWidget() {
         <>
             {/* Floating button (closed state) */}
             {!isOpen && (
-                <div className="fixed bottom-8 right-8 z-50 flex items-end gap-4">
+                <div className="fixed bottom-8 right-4 md:right-8 z-50 flex items-end gap-4">
                     {showExpertPopover && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
                             <ExpertPopover />
@@ -132,7 +132,7 @@ export default function ChatWidget() {
 
             {/* Chat panel (open state) */}
             {isOpen && (
-                <div className="fixed bottom-8 right-8 w-full md:w-[420px] max-w-[360px] h-[600px] bg-white rounded-xl shadow-2xl flex flex-col z-50">
+                <div className="fixed bottom-8 right-4 md:right-8 w-full md:w-[420px] max-w-[360px] h-[600px] bg-white rounded-xl shadow-2xl flex flex-col z-50">
                     {/* Header */}
                     <ChatHeader onClose={() => setIsOpen(false)} />
 
