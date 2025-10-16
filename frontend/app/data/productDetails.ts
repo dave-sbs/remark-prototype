@@ -35,7 +35,7 @@ export const productDetailsData: Record<string, ProductDetailData> = {
             { label: 'Fully Loaded', price: 1895 },
         ],
         specSheetUrl: '#',
-        contactEmail: 'info@remark.studio',
+        contactEmail: 'info@herm&mills.studio',
     },
     '2': {
         id: '2',
@@ -67,11 +67,11 @@ export const productDetailsData: Record<string, ProductDetailData> = {
             { label: 'Warranty', value: '12 years' },
         ],
         pricing: [
-            { label: 'Mid Back', price: 1095 },
-            { label: 'High Back', price: 1395 },
+            { label: 'Mid Back', price: 1649 },
+            { label: 'High Back', price: 1748 },
         ],
         specSheetUrl: '#',
-        contactEmail: 'info@remark.studio',
+        contactEmail: 'info@herm&mills.studio',
     },
     '3': {
         id: '3',
@@ -107,7 +107,7 @@ export const productDetailsData: Record<string, ProductDetailData> = {
             { label: 'Leather Sling', price: 2895 },
         ],
         specSheetUrl: '#',
-        contactEmail: 'info@remark.studio',
+        contactEmail: 'info@herm&mills.studio',
     },
     '4': {
         id: '4',
@@ -143,7 +143,7 @@ export const productDetailsData: Record<string, ProductDetailData> = {
             { label: 'With Casters', price: 795 },
         ],
         specSheetUrl: '#',
-        contactEmail: 'info@remark.studio',
+        contactEmail: 'info@herm&mills.studio',
     },
 }
 
