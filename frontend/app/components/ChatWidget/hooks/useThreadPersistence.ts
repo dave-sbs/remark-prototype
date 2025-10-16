@@ -27,9 +27,6 @@ export function useThreadPersistence(): UseThreadPersistenceReturn {
   const [lastActivity, setLastActivity] = useState<number>(Date.now())
   const [isInitialized, setIsInitialized] = useState(false)
 
-  // Use ref to track if we should create a new thread on next effect run
-  const shouldResetRef = useRef(false)
-
   /**
    * Start a new thread and clear localStorage
    */

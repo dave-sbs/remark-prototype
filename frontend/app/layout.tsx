@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "REMARK - Ergonomic Office Furniture",
+  title: "Herm & Mills - Ergonomic Office Furniture",
   description: "A modern studio focusing on ergonomic office furniture and functional workspace design.",
+  icons: {
+    icon: "/logos/2.png",
+  },
 };
 
 export default function RootLayout({
