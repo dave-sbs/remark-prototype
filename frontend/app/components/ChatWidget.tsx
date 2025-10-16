@@ -28,14 +28,6 @@ import { UI_TIMING } from './ChatWidget/constants'
  * composed components. This replaces the monolithic ChatWidget.tsx
  * with a well-architected, testable implementation.
  *
- * Key improvements:
- * - No hydration issues (SSR-safe localStorage)
- * - Proper state management with useReducer
- * - Extracted business logic into custom hooks
- * - Composed UI from smaller components
- * - Better error handling
- * - No memory leaks
- * - Type-safe throughout
  */
 export default function ChatWidget() {
     // UI state
