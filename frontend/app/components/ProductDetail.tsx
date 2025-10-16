@@ -93,12 +93,11 @@ export default function ProductDetail({ product, onClose, conversationContext }:
 
                             {/* Conversation Context Banner */}
                             {conversationContext?.customDescription && (
-                                <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded">
-                                    <p className="text-sm font-semibold text-blue-900 mb-1 flex items-center gap-2">
-                                        <span>💬</span>
-                                        <span>Based on our conversation</span>
+                                <div className="mb-6 p-4 bg-gray-100 border-l-4 border-gray-800">
+                                    <p className="text-sm font-semibold tracking-tight text-gray-900 mb-1 flex items-center gap-2">
+                                        <span>Based on your conversation with our expert: Dave B.</span>
                                     </p>
-                                    <p className="text-sm text-blue-800">
+                                    <p className="text-sm text-gray-800 tracking-tight">
                                         {conversationContext.customDescription}
                                     </p>
                                 </div>
