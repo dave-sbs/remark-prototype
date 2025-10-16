@@ -1,5 +1,5 @@
 import { getThreadState, updateThreadState } from '@/lib/agent-state'
-import { SALES_AGENT_PROMPT } from '@/lib/prompts'
+import { PRODUCT_RECOMMENDATION_PROMPT } from '@/lib/prompts'
 import { ThreadService } from '@/lib/services/thread.service'
 import { MessageService } from '@/lib/services/message.service'
 import { CatalogService } from '@/lib/services/catalog.service'
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         }
 
         // Build system prompt with catalog context
-        const systemPrompt = state.productCatalogContext + SALES_AGENT_PROMPT
+        const systemPrompt = state.productCatalogContext + PRODUCT_RECOMMENDATION_PROMPT
 
         // Get next sequence number before streaming
         const baseSequenceNum = await messageService.getNextSequenceNumber(activeThreadId)
