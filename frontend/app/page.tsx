@@ -5,6 +5,7 @@ import Image from 'next/image'
 import ProductDetail from './components/ProductDetail'
 import { productDetailsData } from './data/productDetails'
 import ChatWidget from './components/ChatWidget'
+import Link from 'next/link'
 
 type ProductItem = {
   id: string
@@ -140,18 +141,20 @@ export default function Home() {
       <footer className="mt-20">
         <div className="border-t border-gray-600">
           <div className="mx-12 md:mx-32 py-8 md:border-l md:border-r border-gray-600">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-16 px-4">
-              <div className="flex flex-col justify-between items-start text-lg font-semibold">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-6 md:gap-16 px-4">
+              <div className="flex flex-col justify-between items-start text-base lg:text-lg font-semibold">
                 <p className="font-semibold tracking-tight">Herm <span className="text-blue-600">&</span> Mills</p>
                 <p className="tracking-tight text-gray-500">©2025</p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold tracking-tight">Boston, MA | Copenhagen, DK</h3>
-                <p className="text-lg font-semibold tracking-tight">+1 469 515 6223</p>
+                <h3 className="text-base lg:text-lg font-semibold tracking-tight">Made with 🍊, and a lot of ☕ by Dave Boku</h3>
               </div>
-              <div className="flex flex-col tracking-tight">
-                <a href="https://www.linkedin.com/in/dave-boku/" target="_blank" rel="noopener noreferrer" className="text-lg font-semibold hover:underline">LinkedIn</a>
-                <a href="mailto:info@davesah.bs@gmail.com" className="text-lg font-semibold hover:underline">Email</a>
+              <div className="flex flex-col gap-2 md:gap-0 items-center">
+                <div className="flex flex-row gap-4 tracking-tight">
+                  <Link href="https://www.linkedin.com/in/dave-boku/" target="_blank" rel="noopener noreferrer" className="text-base lg:text-lg font-semibold hover:text-gray-500  ">LinkedIn</Link>
+                  <Link href="mailto:info@davesah.bs@gmail.com" className="text-base lg:text-lg font-semibold hover:text-gray-500">Email</Link>
+                </div>
+                <p className="text-base lg:text-lg font-semibold tracking-tight">+1 469 515 6223</p>
               </div>
             </div>
           </div>

@@ -34,7 +34,7 @@ export default function ExpertMatchingCard({ userName }: ExpertMatchingCardProps
             <div className="flex items-center justify-between gap-2 mb-3">
                 <span className='border-b border-gray-200 w-full'></span>
                 <p className="text-xs text-gray-700 font-medium w-full whitespace-nowrap">
-                    Matched with Dave B.
+                    Matched with Dave B. 🍊
                 </p>
                 <span className='border-b border-gray-200 w-full'></span>
             </div>
@@ -88,7 +88,7 @@ export default function ExpertMatchingCard({ userName }: ExpertMatchingCardProps
             <div className="flex flex-col items-start mb-4">
                 <div className="flex flex-row justify-between w-full mb-3">
                     {/* Name */}
-                    <h3 className="text-md font-semibold text-gray-900">Dave B.</h3>
+                    <h3 className="text-md font-semibold text-gray-900">Dave B. 🍊</h3>
                     <button className="text-sm text-blue-600 hover:text-blue-800 hover:underline cursor-pointer">
                         View full profile
                     </button>
