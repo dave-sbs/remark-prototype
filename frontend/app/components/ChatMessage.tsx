@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation'
 import { UIMessage } from 'ai'
 import { saveProductRecommendation } from '@/lib/conversation-context'
 
+import TypingIndicator from './ChatWidget/components/TypingIndicator'
+
+
 export default function ChatMessage({ message, threadId }: { message: UIMessage; threadId: string }) {
     const router = useRouter()
     const isUser = message.role === 'user'
@@ -74,9 +77,13 @@ export default function ChatMessage({ message, threadId }: { message: UIMessage;
                     : 'bg-gray-200 text-black rounded-3xl rounded-bl-sm'
                 }
             `}>
-                <div className="whitespace-pre-wrap break-words overflow-wrap-anywhere">
-                    {content}
-                </div>
+                {content ? (
+                    <div className="whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                        {content}
+                    </div>
+                ) : (
+                    <TypingIndicator />
+                )}
             </div>
         </div>
     )
