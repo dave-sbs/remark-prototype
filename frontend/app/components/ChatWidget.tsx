@@ -21,21 +21,14 @@ import ExpertPopover from './ExpertPopover'
 // Constants
 import { UI_TIMING } from './ChatWidget/constants'
 
-/**
- * Chat Widget Component (Refactored)
- *
- * A clean, maintainable chat widget built with custom hooks and
- * composed components. This replaces the monolithic ChatWidget.tsx
- * with a well-architected, testable implementation.
- *
- */
+
 export default function ChatWidget() {
     // UI state
     const [isOpen, setIsOpen] = useState(false)
     const [showExpertPopover, setShowExpertPopover] = useState(false)
 
     // Thread persistence and activity tracking
-    const { threadId, updateActivity, startNewThread } = useThreadPersistence()
+    const { threadId, updateActivity } = useThreadPersistence()
 
     // Load messages from database
     const {

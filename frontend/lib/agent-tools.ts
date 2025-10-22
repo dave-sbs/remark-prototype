@@ -7,10 +7,6 @@ const supabase = createClient(
     process.env.SUPABASE_SECRET_KEY!
 )
 
-// ============================================================================
-// LLM Tool Functions (Formatted for Agent Consumption)
-// ============================================================================
-
 export const getProductCatalog = tool({
     description: 'Get all available products with their basic information and base prices. Use this to show all available products to the customer, get an overview of the product catalog, or find product IDs for further detailed queries.',
     inputSchema: z.object({}),

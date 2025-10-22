@@ -1,9 +1,6 @@
 export type AgentState = {
     threadId: string
     productCatalogContext: string | null
-    discoveredPainPoints: string[]
-    discoveredBudgetRange: string | null
-    productsDiscussed: string[]
 }
 
 const threadStates = new Map<string, AgentState>()
@@ -13,9 +10,6 @@ export function getThreadState(threadId: string): AgentState {
         threadStates.set(threadId, {
             threadId,
             productCatalogContext: null,
-            discoveredPainPoints: [],
-            discoveredBudgetRange: null,
-            productsDiscussed: []
         })
     }
     return threadStates.get(threadId)!

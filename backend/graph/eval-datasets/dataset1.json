@@ -230,6 +230,13 @@
                 "query": "can you explain gradient descent and SGD, what their differences are, what the goal is, and what the process is",
                 "expected_behavior": "Should indicate that it only knows about office chairs and does not know about machine learning.",
                 "difficulty": "hard"
+            },
+            {
+                "id": 32,
+                "category": "hallucination_test",
+                "query": "I want to return my Aeron chair, what are the steps?",
+                "expected_behavior": "Should indicate that the Aeron chair has a return policy and that the customer should contact the sales department to initiate the return process",
+                "difficulty": "medium"
             }
         ]
     }

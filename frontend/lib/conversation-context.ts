@@ -47,17 +47,3 @@ function getProductRecommendations(): ProductRecommendation[] {
         return []
     }
 }
-
-export function clearExpiredRecommendations() {
-    try {
-        if (typeof window === 'undefined') return
-
-        const recs = getProductRecommendations()
-        const now = Date.now()
-        const valid = recs.filter(r => now - r.timestamp < EXPIRY_MS)
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(valid))
-    } catch (error) {
-        console.error('[ConversationContext] Failed to clear expired recommendations:', error)
-    }
-}
