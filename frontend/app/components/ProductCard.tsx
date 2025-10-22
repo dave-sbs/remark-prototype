@@ -24,7 +24,7 @@ export default function ProductCard({ productName, onNavigate }: ProductCardProp
     return (
         <button
             onClick={onNavigate}
-            className="group relative w-full max-w-[280px] bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all hover:border-gray-400"
+            className="group relative w-full max-w-[280px] bg-white border border-gray-200 overflow-hidden rounded-md hover:shadow-lg transition-all"
         >
             {/* Image */}
             <div className="relative bg-[#c5beb3] flex-shrink-0 overflow-hidden">
@@ -39,15 +39,14 @@ export default function ProductCard({ productName, onNavigate }: ProductCardProp
 
             {/* Content */}
             <div className="p-4 text-left">
-                <h3 className="text-sm font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-sm font-semibold mb-2 group-hover:text-blue-600 transition-colors uppercase">
                     {productName}
                 </h3>
-                <div className="flex items-center text-xs text-gray-600 group-hover:text-blue-600 transition-colors">
-                    <span>View details</span>
+                <div className="flex items-center text-xs tracking-tight text-gray-500 group-hover:text-blue-600 transition-colors">
+                    <span>View Details</span>
                     <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                 </div>
             </div>
-
             {/* Badge */}
             <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-sm">
                 Recommended
